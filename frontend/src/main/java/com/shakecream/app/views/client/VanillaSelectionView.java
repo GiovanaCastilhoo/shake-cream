@@ -1,6 +1,9 @@
 package com.shakecream.app.views.client;
 
 import com.shakecream.app.components.ProductItemCard;
+import com.shakecream.app.models.Product;
+import com.shakecream.app.services.ProductService;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -8,8 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.util.List;
 
 public class VanillaSelectionView {
+
+    private final ProductService productService = new ProductService();
 
     public void show(Stage stage) {
         BorderPane root = new BorderPane();
@@ -40,29 +46,32 @@ public class VanillaSelectionView {
         listContainer.setPadding(new Insets(40, 0, 40, 0));
         listContainer.setAlignment(Pos.TOP_CENTER);
 
-        ProductItemCard cardBaunilhaTrad = new ProductItemCard("Baunilha Tradicional", "Clássico sabor baunilha", "R$ 13,00", "baunilha_tradicional.png");
-        ProductItemCard cardBaunilhaOreo = new ProductItemCard("Baunilha com Oreo", "Com pedaços de Oreo", "R$ 15,00", "baunilha_oreo.png");
-        ProductItemCard cardBaunilhaCaramelo = new ProductItemCard("Baunilha com Caramelo", "Com calda de caramelo", "R$ 16,00", "baunilha_caramelo.png");
-        ProductItemCard cardBaunilhaChoc = new ProductItemCard("Baunilha com Chocolate", "Baunilha com chocolate", "R$ 16,00", "baunilha_chocolate.png");
+        // Chamando o método .getAll() do Service
+        List<Product> totalProducts = productService.getAll();
 
-        // ✨ CORREÇÃO AQUI: Adicionado o parâmetro "Baunilha" no final de cada chamada show()
-        cardBaunilhaTrad.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Baunilha Tradicional", 13.00, "baunilha_tradicional.png", "Clássico sabor baunilha", "Baunilha")
-        );
+        if (totalProducts != null) {
+            for (int i = 0; i < totalProducts.size(); i++) {
+                Product prod = totalProducts.get(i);
+                if (prod == null) continue;
 
-        cardBaunilhaOreo.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Baunilha com Oreo", 15.00, "baunilha_oreo.png", "Com pedaços de Oreo", "Baunilha")
-        );
+                // Filtrando apenas por Baunilha
+                if (prod.getCategoryName() != null && prod.getCategoryName().equalsIgnoreCase("Baunilha")) {
+                    
+                    String nome = prod.getName();
+                    String description = prod.getDescription();
+                    double preco = prod.getPrice();
+                    String imagem = prod.getImageUrl();
 
-        cardBaunilhaCaramelo.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Baunilha com Caramelo", 16.00, "baunilha_caramelo.png", "Com calda de caramelo", "Baunilha")
-        );
+                    ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco), imagem);
 
-        cardBaunilhaChoc.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Baunilha com Chocolate", 16.00, "baunilha_chocolate.png", "Baunilha com chocolate", "Baunilha")
-        );
+                    card.setOnAction(() ->
+                            new ProductDetailsView().show(stage, nome, preco, imagem, description, "Baunilha")
+                    );
 
-        listContainer.getChildren().addAll(cardBaunilhaTrad, cardBaunilhaOreo, cardBaunilhaCaramelo, cardBaunilhaChoc);
+                    listContainer.getChildren().add(card);
+                }
+            }
+        }
 
         ScrollPane scroll = new ScrollPane(listContainer);
         scroll.setFitToWidth(true);
