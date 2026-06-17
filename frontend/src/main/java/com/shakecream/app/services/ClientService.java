@@ -6,13 +6,14 @@ import java.net.URL;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
-import com.shakecream.app.models.LoginResponse;
+import com.shakecream.app.models.ClientLoginResponse;
+import com.shakecream.app.utils.SessionStore;
 
 public class ClientService {
 
     private final Gson gson = new Gson();
 
-    public LoginResponse loginClient(String name, int tableNumber) {
+    public ClientLoginResponse loginClient(String name, int tableNumber) {
         try {
             URL url = new URL("http://localhost:4567/client/login");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -42,7 +43,6 @@ public class ClientService {
 
             String response = sc.useDelimiter("\\A").next();
             sc.close();
-
             conn.disconnect();
 
             System.out.println("Client login response: " + response);
@@ -52,7 +52,11 @@ public class ClientService {
                 return null;
             }
 
-            return gson.fromJson(response, LoginResponse.class);
+            ClientLoginResponse clientLoginResponse = gson.fromJson(response, ClientLoginResponse.class);
+
+            SessionStore.setSessionId(clientLoginResponse.getSessionId());
+
+            return clientLoginResponse;
 
         } catch (Exception e) {
             e.printStackTrace();
