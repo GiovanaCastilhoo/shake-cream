@@ -1,6 +1,7 @@
 package com.shakecream.app.views.client;
 
 import com.shakecream.app.components.FlavorCard;
+import com.shakecream.app.ui.Theme;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,23 +13,20 @@ import javafx.stage.Stage;
 
 public class FlavorSelectionView {
 
-    private final String COLOR_PRIMARY = "#B95C68";
-    private final String COLOR_BG = "#FAF6F2";
-
     public void show(Stage stage) {
         BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: " + COLOR_BG + ";");
+        root.setStyle("-fx-background-color: " + Theme.COLOR_BG_WORKSPACE + ";");
 
         // Header Rosa
         HBox header = new HBox();
         header.setPadding(new Insets(0, 30, 0, 30));
         header.setPrefHeight(80);
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setStyle("-fx-background-color: " + COLOR_PRIMARY + ";");
+        header.setStyle("-fx-background-color: " + Theme.COLOR_PRIMARY + ";");
 
         Button btnVoltar = new Button("←  Voltar");
-        btnVoltar.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
-        // Volta para a tela de categorias
+        btnVoltar.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
         btnVoltar.setOnAction(e -> new CategorySelectionView().start(stage));
 
         header.getChildren().add(btnVoltar);
@@ -40,16 +38,16 @@ public class FlavorSelectionView {
         centerContent.setPadding(new Insets(20));
 
         Label lbTitulo = new Label("Escolha o sabor");
-        lbTitulo.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #3E2723;");
+        lbTitulo.setStyle(
+                "-fx-font-family: 'Montserrat'; -fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #3E2723;");
 
-        // Grid de Sabores (2x2)
         GridPane grid = new GridPane();
         grid.setHgap(30);
         grid.setVgap(30);
         grid.setAlignment(Pos.CENTER);
 
-        // Instanciando os sabores conforme o protótipo
-        FlavorCard cardChocolate = new FlavorCard("Chocolate", "Os clássicos\nque você ama", "chocolate.png", "#3E2723");
+        FlavorCard cardChocolate = new FlavorCard("Chocolate", "Os clássicos\nque você ama", "chocolate.png",
+                "#3E2723");
         FlavorCard cardMorango = new FlavorCard("Morango", "Frutados e\nirresistíveis", "morango.png", "#B95C68");
         FlavorCard cardBaunilha = new FlavorCard("Baunilha", "Leves e\ncremosos", "baunilha.png", "#3E2723");
         FlavorCard cardEspeciais = new FlavorCard("Especiais", "Combinações\nincríveis", "especiais.png", "#3E2723");
