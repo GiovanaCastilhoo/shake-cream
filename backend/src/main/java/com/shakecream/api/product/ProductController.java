@@ -29,6 +29,14 @@ public class ProductController {
       return gson.toJson(productService.getAll());
     });
 
+    get("/products/category/:id", (req, res) -> {
+            res.type("application/json");
+
+            int categoryId = Integer.parseInt(req.params(":id"));
+
+            return productService.getByCategoryId(categoryId);
+        }, new JsonTransformer());
+
     put("/products/:id", (req, res) -> {
       User user = req.attribute("user");
 
