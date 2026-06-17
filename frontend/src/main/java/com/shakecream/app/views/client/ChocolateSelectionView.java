@@ -1,10 +1,6 @@
 package com.shakecream.app.views.client;
 
-import java.util.List;
-
 import com.shakecream.app.components.ProductItemCard;
-import com.shakecream.app.models.Product;
-import com.shakecream.app.services.ProductService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -36,8 +32,8 @@ public class ChocolateSelectionView {
     leftBox.setPickOnBounds(false);
 
     Label lbTituloHeader = new Label("Chocolate");
-    lbTituloHeader.setStyle(
-        "-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
+    lbTituloHeader
+        .setStyle("-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
 
     header.getChildren().addAll(lbTituloHeader, leftBox);
     root.setTop(header);
@@ -47,27 +43,35 @@ public class ChocolateSelectionView {
     listContainer.setPadding(new Insets(40, 0, 40, 0));
     listContainer.setAlignment(Pos.TOP_CENTER);
 
-    ProductService productService = new ProductService();
-    List<Product> products = productService.getAll();
-    for (Product product : products) {
+    ProductItemCard cardTradicional = new ProductItemCard("Chocolate Tradicional", "Milk shake cremoso de chocolate",
+        "R$ 13,00", "choc_tradicional.png");
+    ProductItemCard cardOvomaltine = new ProductItemCard("Chocolate com Ovomaltine", "Com crocante de Ovomaltine",
+        "R$ 15,00", "choc_ovomaltine.png");
+    ProductItemCard cardBrownie = new ProductItemCard("Chocolate com Brownie", "Com pedaços de brownie", "R$ 17,00",
+        "choc_brownie.png");
+    ProductItemCard cardBelga = new ProductItemCard("Chocolate Belga", "Feito com chocolate belga", "R$ 18,00",
+        "choc_belga.png");
+    ProductItemCard cardNutella = new ProductItemCard("Chocolate com Nutella", "Com muita Nutella", "R$ 20,00",
+        "choc_nutella.png");
 
-      ProductItemCard card = new ProductItemCard(
-          product.getName(),
-          product.getDescription(),
-          "R$ " + String.format("%.2f", product.getPrice()).replace(".", ","),
-          product.getImageUrl());
+    // ✨ CORREÇÃO AQUI: Adicionado o parâmetro "Chocolate" no final de cada chamada
+    // show()
+    cardTradicional.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate Tradicional", 13.00,
+        "choc_tradicional.png", "Milk shake cremoso de chocolate", "Chocolate"));
 
-      card.setOnAction(() -> new ProductDetailsView().show(
-          stage,
-          product.getName(),
-          product.getPrice(),
-          product.getImageUrl(),
-          product.getDescription(),
-          product.getCategoryName()
-      ));
+    cardOvomaltine.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate com Ovomaltine", 15.00,
+        "choc_ovomaltine.png", "Com crocante de Ovomaltine", "Chocolate"));
 
-      listContainer.getChildren().add(card);
-    }
+    cardBrownie.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate com Brownie", 17.00,
+        "choc_brownie.png", "Com pedaços de brownie", "Chocolate"));
+
+    cardBelga.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate Belga", 18.00, "choc_belga.png",
+        "Feito com chocolate belga", "Chocolate"));
+
+    cardNutella.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate com Nutella", 20.00,
+        "choc_nutella.png", "Com muita Nutella", "Chocolate"));
+
+    listContainer.getChildren().addAll(cardTradicional, cardOvomaltine, cardBrownie, cardBelga, cardNutella);
 
     ScrollPane scroll = new ScrollPane(listContainer);
     scroll.setFitToWidth(true);
