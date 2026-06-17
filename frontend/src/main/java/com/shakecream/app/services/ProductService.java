@@ -17,7 +17,7 @@ public class ProductService {
 
     public List<Product> getAll() {
         try {
-            URL url = new URL(BASE_URL);
+            URL url = java.net.URI.create(BASE_URL).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("GET");
@@ -39,7 +39,7 @@ public class ProductService {
 
     public Product create(Product product) {
         try {
-            URL url = new URL(BASE_URL);
+            URL url = java.net.URI.create(BASE_URL).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             
             conn.setRequestMethod("POST");
@@ -67,7 +67,7 @@ public class ProductService {
 
     public Product update(int id, Product product) {
         try {
-            URL url = new URL(BASE_URL + "/" + id);
+            URL url = java.net.URI.create(BASE_URL + "/" + id).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("PUT");
@@ -95,7 +95,7 @@ public class ProductService {
 
     public boolean delete(int id) {
         try {
-            URL url = new URL(BASE_URL + "/" + id);
+            URL url = java.net.URI.create(BASE_URL + "/" + id).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("DELETE");

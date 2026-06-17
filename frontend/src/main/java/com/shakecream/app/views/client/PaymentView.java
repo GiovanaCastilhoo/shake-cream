@@ -237,7 +237,6 @@ public class PaymentView {
         contentLayout.setPadding(new Insets(40, 15, 15, 15));
 
         Label lbIcon = new Label(unicodeIcon);
-        // ✨ ALTERAÇÃO AQUI: Garante um tamanho mínimo de 60px para impedir o truncamento em "..."
         lbIcon.setStyle("-fx-font-size: 34; -fx-min-width: 60; -fx-alignment: center;");
 
         VBox textContainer = new VBox(4);
@@ -299,13 +298,17 @@ public class PaymentView {
         }
 
         if (formaPagamentoSelecionada.equals("pix")) {
-            new PixPaymentView().show(stage);
-        } else if (formaPagamentoSelecionada.equals("credito")) {
-            new OrderConfirmationView().show(stage, "Pedido confirmado!");
-        } else if (formaPagamentoSelecionada.equals("debito")) {
-            new OrderConfirmationView().show(stage, "Pedido confirmado!");
-        } else if (formaPagamentoSelecionada.equals("dinheiro")) {
-            new OrderConfirmationView().show(stage, "Pedido recebido! Pague no balcão ao retirar.");
+            // Passa o valor total dinamicamente para a tela de Pix gerar o QR Code correto
+            new PixPaymentView().show(stage, totalGeral);
+        } else {
+            // Se for dinheiro ou cartão, esvazia o carrinho simulando que o pedido foi salvo
+            CarrinhoGlobal.getInstancia().getItens().clear();
+
+            if (formaPagamentoSelecionada.equals("credito") || formaPagamentoSelecionada.equals("debito")) {
+                new OrderConfirmationView().show(stage, "Pedido confirmado!");
+            } else if (formaPagamentoSelecionada.equals("dinheiro")) {
+                new OrderConfirmationView().show(stage, "Pedido recebido! Pague no balcão ao retirar.");
+            }
         }
     }
 }

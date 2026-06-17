@@ -1,7 +1,6 @@
 package com.shakecream.app.views.client;
 
 import com.shakecream.app.HelloApplication;
-import com.shakecream.app.models.ItemCarrinho;
 import com.shakecream.app.state.CarrinhoGlobal;
 
 import javafx.geometry.Insets;
@@ -12,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import java.util.List;
 
 public class PixPaymentView {
 
@@ -21,14 +19,10 @@ public class PixPaymentView {
     private final String COLOR_TEXT_DARK = "#4A3B37";  // Marrom Escuro
     private final String COLOR_TEXT_MUTED = "#8E8A85"; // Cinza das Descrições
 
-    public void show(Stage stage) {
+    // 🟢 MUDANÇA: Agora recebe o totalGeral direto da PaymentView para garantir o mesmo valor
+    public void show(Stage stage, double totalGeral) {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: " + COLOR_BG + ";");
-
-        // --- CÁLCULO DINÂMICO DO VALOR ---
-        List<ItemCarrinho> itensNoCarrinho = CarrinhoGlobal.getInstancia().getItens();
-        double subtotal = itensNoCarrinho.stream().mapToDouble(ItemCarrinho::getValorTotal).sum();
-        double totalGeral = subtotal > 0 ? subtotal + 3.00 : 0.0; // Subtotal + taxa de serviço
 
         // --- HEADER (CABEÇALHO) ---
         StackPane header = new StackPane();
@@ -46,7 +40,7 @@ public class PixPaymentView {
         lbTituloHeader.setStyle("-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 24; -fx-font-weight: bold;");
         StackPane.setAlignment(lbTituloHeader, Pos.CENTER);
 
-        // CORREÇÃO PEDIDA ANTES: Botão Sair à direita que limpa o carrinho e reinicia o totem absoluto
+        // Botão Sair à direita que limpa o carrinho e reinicia o totem absoluto
         Button btnSair = new Button("Sair  ⎋");
         btnSair.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
         btnSair.setOnAction(e -> {
@@ -79,24 +73,37 @@ public class PixPaymentView {
             qrView.setPreserveRatio(true);
             cardQRCode.getChildren().add(qrView);
         } catch (Exception e) {
-            // Caso a imagem falhe ou não exista no seu resources, exibe um aviso em texto
             Label lbPlaceholder = new Label("[ Imagem do QR Code ]\nsalvar em resources/com/shakecream/app/qrcode.png");
             lbPlaceholder.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_MUTED + "; -fx-alignment: center;");
             cardQRCode.getChildren().add(lbPlaceholder);
         }
 
-        // Exibição destacada do valor dinâmico calculado do Pix
+        // Exibição destacada do valor dinâmico passado por parâmetro
         Label lbValorTotal = new Label("Valor do Pix: R$ " + String.format("%.2f", totalGeral));
         lbValorTotal.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 28; -fx-text-fill: " + COLOR_PRIMARY + ";");
 
-        // Botão auxiliar técnico para simular a aprovação e prosseguir no ambiente de desenvolvimento
+        // Botão auxiliar técnico alterado para usar a estrutura do Service
         Button btnSimularAprovacao = new Button("Simular Aprovação do Pix");
         btnSimularAprovacao.setPrefHeight(50);
         btnSimularAprovacao.setPrefWidth(260);
         btnSimularAprovacao.setStyle("-fx-background-color: #E2DDD9; -fx-text-fill: " + COLOR_TEXT_DARK + "; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 14; -fx-background-radius: 12; -fx-cursor: hand;");
-        btnSimularAprovacao.setOnAction(e -> new OrderConfirmationView().show(stage, "Pedido confirmado via Pix!"));
+        
+        btnSimularAprovacao.setOnAction(e -> {
+            // 🧠 Chamando o serviço estruturado padrão Back-end para processar o Pix
+            com.shakecream.app.services.PedidoService pedidoService = new com.shakecream.app.services.PedidoService();
+            
+            boolean sucesso = pedidoService.salvarPedido(
+                CarrinhoGlobal.getInstancia().getItens(), 
+                "pix", 
+                totalGeral
+            );
 
-        // ✨ ALTERAÇÃO EXIGIDA: Sem campos de texto ou botões para copiar chave Pix. Apenas o QR Code e instruções limpas.
+            if (sucesso) {
+                // Esvazia totalmente o carrinho global após salvar com sucesso
+                CarrinhoGlobal.getInstancia().getItens().clear();
+                new OrderConfirmationView().show(stage, "Pedido confirmado via Pix!");
+            }
+        });
 
         centerContent.getChildren().addAll(lbInstrucao, cardQRCode, lbValorTotal, btnSimularAprovacao);
         root.setCenter(centerContent);
