@@ -1,6 +1,8 @@
 package com.shakecream.app.views.client;
 
 import com.shakecream.app.components.ProductItemCard;
+import com.shakecream.app.models.Product;
+import com.shakecream.app.services.ProductService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,14 +11,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.util.List;
 
 public class DrinkSelectionView {
+
+    private final ProductService productService = new ProductService();
 
     public void show(Stage stage) {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FAF6F2;");
 
-        // --- HEADER ---
+        // --- HEADER COM TÍTULO CENTRALIZADO ---
         StackPane header = new StackPane();
         header.setPadding(new Insets(0, 30, 0, 30));
         header.setPrefHeight(80);
@@ -24,6 +29,7 @@ public class DrinkSelectionView {
 
         Button btnVoltar = new Button("←  Voltar");
         btnVoltar.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
+        // Ajuste aqui caso o botão voltar das bebidas precise ir para a CategorySelectionView ao invés de sabores
         btnVoltar.setOnAction(e -> new CategorySelectionView().show(stage));
 
         HBox leftBox = new HBox(btnVoltar);
@@ -41,42 +47,32 @@ public class DrinkSelectionView {
         listContainer.setPadding(new Insets(40, 0, 40, 0));
         listContainer.setAlignment(Pos.TOP_CENTER);
 
-        ProductItemCard cardAguaSemGas = new ProductItemCard("Água Sem Gás — 500 ml", "Água mineral natural sem gás", "R$ 2,50", "agua_sem.png");
-        ProductItemCard cardAguaComGas = new ProductItemCard("Água Com Gás — 500 ml", "Água mineral natural com gás", "R$ 3,00", "agua_com.png");
-        ProductItemCard cardCocaLata = new ProductItemCard("Coca Cola Lata — 350 ml", "Refrigerante Coca Cola lata gelada", "R$ 5,00", "coca.png");
-        ProductItemCard cardGuaranaLata = new ProductItemCard("Guaraná Antarctica Lata — 350 ml", "Refrigerante Guaraná Antarctica lata", "R$ 5,00", "guarana.png");
-        ProductItemCard cardH2oLimoneto = new ProductItemCard("Refrigerante H2o Limoneto — 500 ml", "Bebida levemente gaseificada sabor limão", "R$ 7,00", "h2o.png");
-        ProductItemCard cardSucoNaturalOne = new ProductItemCard("Suco de laranja Natural One — 900 ml", "Suco de laranja 100% natural", "R$ 12,00", "suco_laranja.png");
+        // Chamando o método .getAll() do Service
+        List<Product> totalProducts = productService.getAll();
 
-        // INTEGRAÇÃO REALIZADA: Passando 'true' como 6º parâmetro para sinalizar que o item é uma bebida
-        cardAguaSemGas.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Água Sem Gás — 500 ml", 2.50, "agua_sem.png", "Água mineral natural sem gás", true)
-        );
+        if (totalProducts != null) {
+            for (int i = 0; i < totalProducts.size(); i++) {
+                Product prod = totalProducts.get(i);
+                if (prod == null) continue;
 
-        cardAguaComGas.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Água Com Gás — 500 ml", 3.00, "agua_com.png", "Água mineral natural com gás", true)
-        );
+                // Filtrando apenas por Bebidas
+                if (prod.getCategoryName() != null && prod.getCategoryName().equalsIgnoreCase("Bebida")) {
+                    
+                    String nome = prod.getName();
+                    String description = prod.getDescription();
+                    double preco = prod.getPrice();
+                    String imagem = prod.getImageUrl();
 
-        cardCocaLata.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Coca Cola Lata — 350 ml", 5.00, "coca.png", "Refrigerante Coca Cola lata gelada", true)
-        );
+                    ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco), imagem);
 
-        cardGuaranaLata.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Guaraná Antarctica Lata — 350 ml", 5.00, "guarana.png", "Refrigerante Guaraná Antarctica lata", true)
-        );
+                    card.setOnAction(() ->
+                            new ProductDetailsView().show(stage, nome, preco, imagem, description, "Bebida")
+                    );
 
-        cardH2oLimoneto.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Refrigerante H2o Limoneto — 500 ml", 7.00, "h2o.png", "Bebida levemente gaseificada sabor limão", true)
-        );
-
-        cardSucoNaturalOne.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Suco de laranja Natural One — 900 ml", 12.00, "suco_laranja.png", "Suco de laranja 100% natural", true)
-        );
-
-        listContainer.getChildren().addAll(
-                cardAguaSemGas, cardAguaComGas, cardCocaLata,
-                cardGuaranaLata, cardH2oLimoneto, cardSucoNaturalOne
-        );
+                    listContainer.getChildren().add(card);
+                }
+            }
+        }
 
         ScrollPane scroll = new ScrollPane(listContainer);
         scroll.setFitToWidth(true);

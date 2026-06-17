@@ -1,6 +1,8 @@
 package com.shakecream.app.views.client;
 
 import com.shakecream.app.components.ProductItemCard;
+import com.shakecream.app.models.Product;
+import com.shakecream.app.services.ProductService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,8 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.util.List;
 
 public class ChocolateSelectionView {
+
+  private final ProductService productService = new ProductService();
 
   public void show(Stage stage) {
     BorderPane root = new BorderPane();
@@ -43,35 +48,32 @@ public class ChocolateSelectionView {
     listContainer.setPadding(new Insets(40, 0, 40, 0));
     listContainer.setAlignment(Pos.TOP_CENTER);
 
-    ProductItemCard cardTradicional = new ProductItemCard("Chocolate Tradicional", "Milk shake cremoso de chocolate",
-        "R$ 13,00", "choc_tradicional.png");
-    ProductItemCard cardOvomaltine = new ProductItemCard("Chocolate com Ovomaltine", "Com crocante de Ovomaltine",
-        "R$ 15,00", "choc_ovomaltine.png");
-    ProductItemCard cardBrownie = new ProductItemCard("Chocolate com Brownie", "Com pedaços de brownie", "R$ 17,00",
-        "choc_brownie.png");
-    ProductItemCard cardBelga = new ProductItemCard("Chocolate Belga", "Feito com chocolate belga", "R$ 18,00",
-        "choc_belga.png");
-    ProductItemCard cardNutella = new ProductItemCard("Chocolate com Nutella", "Com muita Nutella", "R$ 20,00",
-        "choc_nutella.png");
+    // Chamando o método .getAll() que a Giovana criou no Service
+    List<Product> totalProducts = productService.getAll();
 
-    // ✨ CORREÇÃO AQUI: Adicionado o parâmetro "Chocolate" no final de cada chamada
-    // show()
-    cardTradicional.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate Tradicional", 13.00,
-        "choc_tradicional.png", "Milk shake cremoso de chocolate", "Chocolate"));
+    if (totalProducts != null) {
+      for (int i = 0; i < totalProducts.size(); i++) {
+        Product prod = totalProducts.get(i);
+        if (prod == null)
+          continue;
 
-    cardOvomaltine.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate com Ovomaltine", 15.00,
-        "choc_ovomaltine.png", "Com crocante de Ovomaltine", "Chocolate"));
+        // ✨ CORREÇÃO: Mudado de getCategory() para getCategoryName()
+        if (prod.getCategoryName() != null && prod.getCategoryName().equalsIgnoreCase("Chocolate")) {
 
-    cardBrownie.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate com Brownie", 17.00,
-        "choc_brownie.png", "Com pedaços de brownie", "Chocolate"));
+          String nome = prod.getName();
+          String description = prod.getDescription();
+          double preco = prod.getPrice();
+          // ✨ CORREÇÃO: Mudado de getImageName() para getImageUrl()
+          String imagem = prod.getImageUrl();
 
-    cardBelga.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate Belga", 18.00, "choc_belga.png",
-        "Feito com chocolate belga", "Chocolate"));
+          ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco), imagem);
 
-    cardNutella.setOnAction(() -> new ProductDetailsView().show(stage, "Chocolate com Nutella", 20.00,
-        "choc_nutella.png", "Com muita Nutella", "Chocolate"));
+          card.setOnAction(() -> new ProductDetailsView().show(stage, nome, preco, imagem, description, "Chocolate"));
 
-    listContainer.getChildren().addAll(cardTradicional, cardOvomaltine, cardBrownie, cardBelga, cardNutella);
+          listContainer.getChildren().add(card);
+        }
+      }
+    }
 
     ScrollPane scroll = new ScrollPane(listContainer);
     scroll.setFitToWidth(true);
