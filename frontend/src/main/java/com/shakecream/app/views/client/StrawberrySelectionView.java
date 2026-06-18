@@ -50,7 +50,6 @@ public class StrawberrySelectionView {
 
         // Busca os produtos pela categoria
         List<Product> products = productService.getByCategoryId(categoryId);
-        System.out.println("Produtos encontrados: " + (products != null ? products.size() : "null"));
 
         if (products == null || products.isEmpty()) {
             Label empty = new Label("Nenhum produto encontrado.");

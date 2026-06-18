@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 
 public class PaymentView {
 
-    private final String COLOR_PRIMARY = "#B95C68";   // Vinho do Figma
-    private final String COLOR_BG = "#FAF6F2";        // Fundo Creme
-    private final String COLOR_TEXT_DARK = "#4A3B37";  // Marrom Escuro
+    private final String COLOR_PRIMARY = "#B95C68"; // Vinho do Figma
+    private final String COLOR_BG = "#FAF6F2"; // Fundo Creme
+    private final String COLOR_TEXT_DARK = "#4A3B37"; // Marrom Escuro
     private final String COLOR_TEXT_MUTED = "#8E8A85"; // Cinza das Descrições
 
     private double subtotal = 0.0;
@@ -47,12 +47,14 @@ public class PaymentView {
         header.setPadding(new Insets(0, 30, 0, 30));
 
         Button btnVoltar = new Button("← Voltar");
-        btnVoltar.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
+        btnVoltar.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
         btnVoltar.setOnAction(e -> new MyOrderView().show(stage));
         StackPane.setAlignment(btnVoltar, Pos.CENTER_LEFT);
 
         Label lbTituloHeader = new Label("Pagamento");
-        lbTituloHeader.setStyle("-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
+        lbTituloHeader.setStyle(
+                "-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
 
         header.getChildren().addAll(lbTituloHeader, btnVoltar);
         root.setTop(header);
@@ -68,10 +70,13 @@ public class PaymentView {
 
         VBox painelPedido = new VBox(15);
         painelPedido.setPadding(new Insets(25));
-        painelPedido.setStyle("-fx-background-color: white; -fx-background-radius: 25; -fx-border-color: #E2DDD9; -fx-border-radius: 25;");
+        painelPedido.setStyle(
+                "-fx-background-color: white; -fx-background-radius: 25; -fx-border-color: #E2DDD9; -fx-border-radius: 25;");
 
         Label lbSeuPedidoTitulo = new Label("Seu pedido");
-        lbSeuPedidoTitulo.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 22; -fx-text-fill: " + COLOR_TEXT_DARK + ";");
+        lbSeuPedidoTitulo
+                .setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 22; -fx-text-fill: "
+                        + COLOR_TEXT_DARK + ";");
         painelPedido.getChildren().add(lbSeuPedidoTitulo);
 
         VBox itensContainer = new VBox(14);
@@ -87,10 +92,12 @@ public class PaymentView {
 
         VBox painelValores = new VBox(14);
         painelValores.setPadding(new Insets(25));
-        painelValores.setStyle("-fx-background-color: white; -fx-background-radius: 25; -fx-border-color: #E2DDD9; -fx-border-radius: 25;");
+        painelValores.setStyle(
+                "-fx-background-color: white; -fx-background-radius: 25; -fx-border-color: #E2DDD9; -fx-border-radius: 25;");
 
         HBox rowSubtotal = criarRowPreco("Subtotal", "R$ " + String.format("%.2f", subtotal), false);
-        HBox rowTaxa = criarRowPreco("Taxa de serviço", "R$ " + String.format("%.2f", subtotal > 0 ? TAXA_SERVICO : 0.0), false);
+        HBox rowTaxa = criarRowPreco("Taxa de serviço",
+                "R$ " + String.format("%.2f", subtotal > 0 ? TAXA_SERVICO : 0.0), false);
 
         Region separator = new Region();
         separator.setPrefHeight(1);
@@ -107,7 +114,9 @@ public class PaymentView {
         colDireita.setAlignment(Pos.TOP_LEFT);
 
         Label lbEscolhaTitulo = new Label("Escolha a forma de pagamento");
-        lbEscolhaTitulo.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 22; -fx-text-fill: " + COLOR_TEXT_DARK + ";");
+        lbEscolhaTitulo
+                .setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 22; -fx-text-fill: "
+                        + COLOR_TEXT_DARK + ";");
         colDireita.getChildren().add(lbEscolhaTitulo);
 
         GridPane gridPagamentos = new GridPane();
@@ -116,7 +125,8 @@ public class PaymentView {
 
         cardCredito = criarCardPagamentoHorizontal("💳", "Cartão de Crédito", "Pagamento na maquininha", "credito");
         cardDebito = criarCardPagamentoHorizontal("💳", "Cartão de Débito", "Pagamento na maquininha", "debito");
-        cardDinheiro = criarCardPagamentoHorizontal("💵", "Dinheiro", "Pagamento na entrega ou retirada do pedido", "dinheiro");
+        cardDinheiro = criarCardPagamentoHorizontal("💵", "Dinheiro", "Pagamento na entrega ou retirada do pedido",
+                "dinheiro");
         cardPix = criarCardPagamentoHorizontal("✨", "Pix", "Pagamento instantâneo\nvia QR Code", "pix");
 
         gridPagamentos.add(cardCredito, 0, 0);
@@ -128,11 +138,13 @@ public class PaymentView {
         btnConfirmarPedido = new Button("🔒  Confirmar pedido  •  R$ " + String.format("%.2f", totalGeral));
         btnConfirmarPedido.setMaxWidth(Double.MAX_VALUE);
         btnConfirmarPedido.setPrefHeight(60);
-        btnConfirmarPedido.setStyle("-fx-background-color: " + COLOR_PRIMARY + "; -fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 18; -fx-background-radius: 18; -fx-cursor: hand;");
+        btnConfirmarPedido.setStyle("-fx-background-color: " + COLOR_PRIMARY
+                + "; -fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 18; -fx-background-radius: 18; -fx-cursor: hand;");
         btnConfirmarPedido.setOnAction(e -> finalizarFluxoPedido(stage));
 
         Label lbFooterSeguranca = new Label("🔒 Seus dados e pagamento estão protegidos.");
-        lbFooterSeguranca.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-text-fill: " + COLOR_TEXT_MUTED + ";");
+        lbFooterSeguranca
+                .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-text-fill: " + COLOR_TEXT_MUTED + ";");
 
         VBox bottomActionsContainer = new VBox(15);
         bottomActionsContainer.setAlignment(Pos.CENTER);
@@ -171,32 +183,41 @@ public class PaymentView {
         HBox.setHgrow(boxDetalhes, Priority.ALWAYS);
 
         Label lbNome = new Label(item.getQuantidade() + "x " + item.getProdutoNome());
-        lbNome.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: " + COLOR_TEXT_DARK + ";");
+        lbNome.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: "
+                + COLOR_TEXT_DARK + ";");
 
         String txtTam = item.getTamanho();
-        if (txtTam.equals("P")) txtTam = "P - 300ml";
-        else if (txtTam.equals("M")) txtTam = "M - 400ml";
-        else if (txtTam.equals("G")) txtTam = "G - 500ml";
+        if (txtTam.equals("P"))
+            txtTam = "P - 300ml";
+        else if (txtTam.equals("M"))
+            txtTam = "M - 400ml";
+        else if (txtTam.equals("G"))
+            txtTam = "G - 500ml";
 
         Label lbComplementos = new Label(txtTam);
-        lbComplementos.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_MUTED + ";");
+        lbComplementos
+                .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_MUTED + ";");
         boxDetalhes.getChildren().addAll(lbNome, lbComplementos);
 
         if (item.getAdicionaisEscolhidos() != null && !item.getAdicionaisEscolhidos().isEmpty()) {
-            String strAdicionais = item.getAdicionaisEscolhidos().stream().map(Additional::getName).collect(Collectors.joining(", "));
+            String strAdicionais = item.getAdicionaisEscolhidos().stream().map(Additional::getName)
+                    .collect(Collectors.joining(", "));
             Label lbExtras = new Label("*" + strAdicionais);
-            lbExtras.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_MUTED + ";");
+            lbExtras.setStyle(
+                    "-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_MUTED + ";");
             boxDetalhes.getChildren().add(lbExtras);
         }
 
         if (item.getObservacao() != null && !item.getObservacao().trim().isEmpty()) {
             Label lbObs = new Label("Obs: \"" + item.getObservacao() + "\"");
-            lbObs.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_PRIMARY + "; -fx-font-style: italic;");
+            lbObs.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_PRIMARY
+                    + "; -fx-font-style: italic;");
             boxDetalhes.getChildren().add(lbObs);
         }
 
         Label lbPrecoItem = new Label("R$ " + String.format("%.2f", item.getValorTotal()));
-        lbPrecoItem.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: " + COLOR_TEXT_DARK + ";");
+        lbPrecoItem.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: "
+                + COLOR_TEXT_DARK + ";");
 
         row.getChildren().addAll(frameImg, boxDetalhes, lbPrecoItem);
         return row;
@@ -208,11 +229,14 @@ public class PaymentView {
         Label l2 = new Label(valor);
 
         if (isTotal) {
-            l1.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 22; -fx-text-fill: " + COLOR_TEXT_DARK + ";");
-            l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 26; -fx-text-fill: " + COLOR_PRIMARY + ";");
+            l1.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 22; -fx-text-fill: "
+                    + COLOR_TEXT_DARK + ";");
+            l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 26; -fx-text-fill: "
+                    + COLOR_PRIMARY + ";");
         } else {
             l1.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 16; -fx-text-fill: " + COLOR_TEXT_DARK + ";");
-            l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: " + COLOR_TEXT_DARK + ";");
+            l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: "
+                    + COLOR_TEXT_DARK + ";");
         }
 
         Region sp = new Region();
@@ -221,7 +245,8 @@ public class PaymentView {
         return row;
     }
 
-    private StackPane criarCardPagamentoHorizontal(String unicodeIcon, String titulo, String descricao, String idForma) {
+    private StackPane criarCardPagamentoHorizontal(String unicodeIcon, String titulo, String descricao,
+            String idForma) {
         StackPane cardRoot = new StackPane();
         cardRoot.setPrefSize(280, 155);
         cardRoot.setCursor(javafx.scene.Cursor.HAND);
@@ -237,7 +262,6 @@ public class PaymentView {
         contentLayout.setPadding(new Insets(40, 15, 15, 15));
 
         Label lbIcon = new Label(unicodeIcon);
-        // ✨ ALTERAÇÃO AQUI: Garante um tamanho mínimo de 60px para impedir o truncamento em "..."
         lbIcon.setStyle("-fx-font-size: 34; -fx-min-width: 60; -fx-alignment: center;");
 
         VBox textContainer = new VBox(4);
@@ -245,11 +269,13 @@ public class PaymentView {
         HBox.setHgrow(textContainer, Priority.ALWAYS);
 
         Label lbTituloCard = new Label(titulo);
-        lbTituloCard.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: " + COLOR_TEXT_DARK + ";");
+        lbTituloCard.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: "
+                + COLOR_TEXT_DARK + ";");
 
         Label lbDescCard = new Label(descricao);
         lbDescCard.setWrapText(true);
-        lbDescCard.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_MUTED + "; -fx-line-spacing: 1.1;");
+        lbDescCard.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_MUTED
+                + "; -fx-line-spacing: 1.1;");
 
         textContainer.getChildren().addAll(lbTituloCard, lbDescCard);
         contentLayout.getChildren().addAll(lbIcon, textContainer);
@@ -266,16 +292,20 @@ public class PaymentView {
 
     private void atualizarEstiloCardsPagamento() {
         String estiloInativo = "-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: #E2DDD9; -fx-border-radius: 20; -fx-border-width: 1;";
-        String estiloAtivo = "-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: " + COLOR_PRIMARY + "; -fx-border-radius: 20; -fx-border-width: 2;";
+        String estiloAtivo = "-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: "
+                + COLOR_PRIMARY + "; -fx-border-radius: 20; -fx-border-width: 2;";
 
         cardCredito.setStyle(formaPagamentoSelecionada.equals("credito") ? estiloAtivo : estiloInativo);
         cardDebito.setStyle(formaPagamentoSelecionada.equals("debito") ? estiloAtivo : estiloInativo);
         cardDinheiro.setStyle(formaPagamentoSelecionada.equals("dinheiro") ? estiloAtivo : estiloInativo);
         cardPix.setStyle(formaPagamentoSelecionada.equals("pix") ? estiloAtivo : estiloInativo);
 
-        configurarIndicadorRadio((StackPane) cardCredito.getChildren().get(0), formaPagamentoSelecionada.equals("credito"));
-        configurarIndicadorRadio((StackPane) cardDebito.getChildren().get(0), formaPagamentoSelecionada.equals("debito"));
-        configurarIndicadorRadio((StackPane) cardDinheiro.getChildren().get(0), formaPagamentoSelecionada.equals("dinheiro"));
+        configurarIndicadorRadio((StackPane) cardCredito.getChildren().get(0),
+                formaPagamentoSelecionada.equals("credito"));
+        configurarIndicadorRadio((StackPane) cardDebito.getChildren().get(0),
+                formaPagamentoSelecionada.equals("debito"));
+        configurarIndicadorRadio((StackPane) cardDinheiro.getChildren().get(0),
+                formaPagamentoSelecionada.equals("dinheiro"));
         configurarIndicadorRadio((StackPane) cardPix.getChildren().get(0), formaPagamentoSelecionada.equals("pix"));
     }
 

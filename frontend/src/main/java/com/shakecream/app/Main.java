@@ -17,7 +17,6 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // Abre o app direto na tela de categorias
         new CategorySelectionView().show(primaryStage);
     }
 }
