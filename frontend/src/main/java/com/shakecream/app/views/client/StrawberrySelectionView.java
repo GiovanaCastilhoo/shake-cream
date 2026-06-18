@@ -23,7 +23,6 @@ public class StrawberrySelectionView {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FAF6F2;");
 
-        // HEADER
         StackPane header = new StackPane();
         header.setPadding(new Insets(0, 30, 0, 30));
         header.setPrefHeight(80);
@@ -43,12 +42,10 @@ public class StrawberrySelectionView {
         header.getChildren().addAll(titulo, leftBox);
         root.setTop(header);
 
-        // CONTAINER
         VBox listContainer = new VBox(18);
         listContainer.setPadding(new Insets(40));
         listContainer.setAlignment(Pos.TOP_CENTER);
 
-        // Busca os produtos pela categoria
         List<Product> products = productService.getByCategoryId(categoryId);
 
         if (products == null || products.isEmpty()) {

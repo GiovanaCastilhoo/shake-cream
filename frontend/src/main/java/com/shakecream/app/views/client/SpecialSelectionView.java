@@ -1,6 +1,10 @@
 package com.shakecream.app.views.client;
 
+import java.util.List;
+
 import com.shakecream.app.components.ProductItemCard;
+import com.shakecream.app.models.Product;
+import com.shakecream.app.services.ProductService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,75 +16,100 @@ import javafx.stage.Stage;
 
 public class SpecialSelectionView {
 
-        public void show(Stage stage, int categoryId) {
-                BorderPane root = new BorderPane();
-                root.setStyle("-fx-background-color: #FAF6F2;");
+  private final ProductService productService = new ProductService();
 
-                // --- HEADER COM TÍTULO CENTRALIZADO ---
-                StackPane header = new StackPane();
-                header.setPadding(new Insets(0, 30, 0, 30));
-                header.setPrefHeight(80);
-                header.setStyle("-fx-background-color: #B95C68;");
+  public void show(Stage stage, int categoryId) {
 
-                Button btnVoltar = new Button("←  Voltar");
-                btnVoltar.setStyle(
-                                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
-                btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage, categoryId));
+    BorderPane root = new BorderPane();
+    root.setStyle("-fx-background-color: #FAF6F2;");
 
-                HBox leftBox = new HBox(btnVoltar);
-                leftBox.setAlignment(Pos.CENTER_LEFT);
-                leftBox.setPickOnBounds(false);
+    // HEADER
+    StackPane header = new StackPane();
+    header.setPadding(new Insets(0, 30, 0, 30));
+    header.setPrefHeight(80);
+    header.setStyle("-fx-background-color: #B95C68;");
 
-                Label lbTituloHeader = new Label("Especiais");
-                lbTituloHeader.setStyle(
-                                "-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
+    Button btnVoltar = new Button("← Voltar");
+    btnVoltar.setStyle(
+        "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;");
+    btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage, categoryId));
 
-                header.getChildren().addAll(lbTituloHeader, leftBox);
-                root.setTop(header);
+    HBox leftBox = new HBox(btnVoltar);
+    leftBox.setAlignment(Pos.CENTER_LEFT);
+    leftBox.setPickOnBounds(false);
 
-                // --- LISTA DE PRODUTOS ---
-                VBox listContainer = new VBox(18);
-                listContainer.setPadding(new Insets(40, 0, 40, 0));
-                listContainer.setAlignment(Pos.TOP_CENTER);
+    Label title = new Label("Especiais");
+    title.setStyle(
+        "-fx-text-fill: white; -fx-font-size: 26; -fx-font-weight: bold;");
 
-                // // Instanciação dos produtos especiais do cardápio
-                // ProductItemCard cardNinhoNutella = new ProductItemCard("Kinder Bueno Shake",
-                // "Kinder Bueno batido com Nutella original", "R$ 18,00", "kinder_bueno.png");
-                // ProductItemCard cardOreoSupremo = new ProductItemCard("Ferrero Rocher Shake",
-                // "Bombom de avelã com calda premium de chocolate", "R$ 17,00", "ferrero.png");
-                // ProductItemCard cardKinderBueno = new ProductItemCard("Ovomaltine Supreme",
-                // "Base super cremosa com Ovomaltine crocante", "R$ 20,00",
-                // "ovomaltine_supreme.png");
-                // ProductItemCard cardChurros = new ProductItemCard("Banoffee Shake",
-                // "Doce de leite, banana fresca e biscoito", "R$ 16,00", "banoffee.png");
+    header.getChildren().addAll(title, leftBox);
+    root.setTop(header);
 
-                // // Vinculando as ações e enviando o parâmetro contextual "Especiais" no final
-                // cardNinhoNutella.setOnAction(() -> new ProductDetailsView().show(stage,
-                // "Kinder Bueno Shake", 18.00,
-                // "kinder_bueno.png", "Milk shake com chocolate Kinder Bueno", "Especiais"));
+    // LISTA
+    VBox listContainer = new VBox(18);
+    listContainer.setPadding(new Insets(40, 0, 40, 0));
+    listContainer.setAlignment(Pos.TOP_CENTER);
 
-                // cardOreoSupremo.setOnAction(() -> new ProductDetailsView().show(stage,
-                // "Ferrero Rocher Shake", 17.00,
-                // "ferrero.png", "Milk shake inspirado no Ferrero", "Especiais"));
+    List<Product> products = productService.getByCategoryId(categoryId);
 
-                // cardKinderBueno.setOnAction(() -> new ProductDetailsView().show(stage,
-                // "Ovomaltine Supreme", 20.00,
-                // "ovomaltine_supreme.png", "Milk shake de ovomaltine extra crocante",
-                // "Especiais"));
+    if (products == null || products.isEmpty()) {
+      listContainer.getChildren().add(new Label("Nenhum produto encontrado."));
+    } else {
 
-                // cardChurros.setOnAction(() -> new ProductDetailsView().show(stage, "Banoffee
-                // Shake", 16.00,
-                // "banoffee.png", "Milk shake de banana com doce de leite", "Especiais"));
+      for (Product prod : products) {
+        if (prod == null)
+          continue;
 
-                // listContainer.getChildren().addAll(cardNinhoNutella, cardOreoSupremo,
-                // cardKinderBueno, cardChurros);
+        String name = prod.getName();
+        if (name == null)
+          continue;
 
-                // ScrollPane scroll = new ScrollPane(listContainer);
-                // scroll.setFitToWidth(true);
-                // scroll.setStyle("-fx-background: transparent; -fx-background-color:
-                // transparent;");
+        String n = name.toLowerCase().trim();
 
-                // root.setCenter(scroll);
-                stage.getScene().setRoot(root);
-        }
+        boolean isEspecial = !n.startsWith("morango") &&
+            !n.startsWith("chocolate") &&
+            !n.startsWith("baunilha");
+
+        if (!isEspecial)
+          continue;
+
+        String descricao = prod.getDescription();
+        double preco = prod.getPrice();
+        String imagem = prod.getImageUrl();
+
+        String finalImagem = (imagem == null || imagem.isBlank())
+            ? "morango_tradicional.png"
+            : imagem;
+
+        ProductItemCard card = new ProductItemCard(
+            name,
+            descricao,
+            "R$ " + String.format("%.2f", preco),
+            finalImagem);
+
+        card.setOnAction(() -> new ProductDetailsView().show(
+            stage,
+            name,
+            preco,
+            finalImagem,
+            descricao,
+            "Especiais",
+            prod.getCategoryId()));
+
+        listContainer.getChildren().add(card);
+      }
+    }
+
+    ScrollPane scroll = new ScrollPane(listContainer);
+    scroll.setFitToWidth(true);
+    scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+
+    root.setCenter(scroll);
+
+    if (stage.getScene() == null) {
+      stage.setScene(new javafx.scene.Scene(root, 900, 600));
+    } else {
+      stage.getScene().setRoot(root);
+    }
+  }
 }
