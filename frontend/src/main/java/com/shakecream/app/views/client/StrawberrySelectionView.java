@@ -50,6 +50,7 @@ public class StrawberrySelectionView {
 
         // Busca os produtos pela categoria
         List<Product> products = productService.getByCategoryId(categoryId);
+        System.out.println("Produtos encontrados: " + (products != null ? products.size() : "null"));
 
         if (products == null || products.isEmpty()) {
             Label empty = new Label("Nenhum produto encontrado.");
@@ -60,8 +61,6 @@ public class StrawberrySelectionView {
                     continue;
 
                 String name = prod.getName();
-
-                // Filtra pelo nome "Morango"
                 if (name != null && name.toLowerCase().trim().startsWith("morango")) {
 
                     String nome = prod.getName();
@@ -69,14 +68,16 @@ public class StrawberrySelectionView {
                     double preco = prod.getPrice();
                     String imagem = prod.getImageUrl();
 
+                    String imageIsNotNull = (imagem != null && !imagem.trim().isEmpty()) ? imagem
+                            : "morango_tradicional.png";
                     ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco),
-                            imagem);
+                            imageIsNotNull);
 
                     card.setOnAction(() -> new ProductDetailsView().show(
                             stage,
                             nome,
                             preco,
-                            imagem,
+                            imageIsNotNull,
                             description,
                             "Morango",
                             prod.getCategoryId()));
