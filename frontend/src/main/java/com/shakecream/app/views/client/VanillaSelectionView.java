@@ -6,11 +6,13 @@ import com.shakecream.app.services.ProductService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 import java.util.List;
 
 public class VanillaSelectionView {
@@ -21,31 +23,29 @@ public class VanillaSelectionView {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FAF6F2;");
 
-        // --- HEADER COM TÍTULO CENTRALIZADO ---
+        // HEADER
         StackPane header = new StackPane();
         header.setPadding(new Insets(0, 30, 0, 30));
         header.setPrefHeight(80);
         header.setStyle("-fx-background-color: #B95C68;");
 
-        Button btnVoltar = new Button("←  Voltar");
+        Button btnVoltar = new Button("← Voltar");
         btnVoltar.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
+                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;");
         btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage, categoryId));
 
         HBox leftBox = new HBox(btnVoltar);
         leftBox.setAlignment(Pos.CENTER_LEFT);
-        leftBox.setPickOnBounds(false);
 
-        Label lbTituloHeader = new Label("Baunilha");
-        lbTituloHeader.setStyle(
-                "-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
+        Label titulo = new Label("Baunilha");
+        titulo.setStyle("-fx-text-fill: white; -fx-font-size: 26; -fx-font-weight: bold;");
 
-        header.getChildren().addAll(lbTituloHeader, leftBox);
+        header.getChildren().addAll(titulo, leftBox);
         root.setTop(header);
 
-        // --- LISTA DE PRODUTOS ---
+        // CONTAINER
         VBox listContainer = new VBox(18);
-        listContainer.setPadding(new Insets(40, 0, 40, 0));
+        listContainer.setPadding(new Insets(40));
         listContainer.setAlignment(Pos.TOP_CENTER);
 
         List<Product> products = productService.getByCategoryId(categoryId);
@@ -59,6 +59,8 @@ public class VanillaSelectionView {
                     continue;
 
                 String name = prod.getName();
+
+                // Filtro para "Baunilha"
                 if (name != null && name.toLowerCase().trim().startsWith("baunilha")) {
 
                     String nome = prod.getName();
@@ -75,9 +77,9 @@ public class VanillaSelectionView {
                             stage,
                             nome,
                             preco,
-                            imageIsNotNull,
+                            imagem,
                             description,
-                            "Morango",
+                            "Baunilha",
                             prod.getCategoryId()));
 
                     listContainer.getChildren().add(card);
@@ -90,6 +92,11 @@ public class VanillaSelectionView {
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
         root.setCenter(scroll);
-        stage.getScene().setRoot(root);
+
+        if (stage.getScene() == null) {
+            stage.setScene(new Scene(root, 900, 600));
+        } else {
+            stage.getScene().setRoot(root);
+        }
     }
 }
