@@ -4,6 +4,7 @@ import com.shakecream.app.services.ClientService;
 import com.shakecream.app.utils.SessionStore;
 import com.shakecream.app.views.admin.AdminLoginView;
 import com.shakecream.app.views.client.CategorySelectionView;
+import com.shakecream.app.components.AlertComponent;
 import com.shakecream.app.models.ClientLoginResponse;
 
 import javafx.application.Application;
@@ -193,28 +194,26 @@ public class HelloApplication extends Application {
         try {
             tableNumber = Integer.parseInt(mesa);
         } catch (NumberFormatException e) {
-            System.out.println("Mesa inválida.");
+            AlertComponent.showWarning(
+                    "Mesa inválida",
+                    "Digite apenas números válidos para a mesa.");
             return;
         }
 
         ClientLoginResponse clientLoginResponse = clientService.loginClient(nome, tableNumber);
 
         if (clientLoginResponse == null) {
-            System.out.println("Erro ao criar sessão do cliente.");
+            AlertComponent.showError(
+                    "Erro no login",
+                    "Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.");
             return;
         }
 
-        // SALVA TOKEN (sessionId no client)
         SessionStore.setSessionId(clientLoginResponse.getSessionId());
 
-        // CLIENT NÃO TEM USER → define fixo
         SessionStore.setRole("USER");
         SessionStore.setUserId(null);
-
-        // opcional: guardar mesa
         SessionStore.setTableNumber(tableNumber);
-
-        System.out.println("Cliente logado: " + nome);
 
         new CategorySelectionView().show(stage);
     }

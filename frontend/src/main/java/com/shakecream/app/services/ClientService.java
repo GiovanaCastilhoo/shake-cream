@@ -45,8 +45,6 @@ public class ClientService {
             sc.close();
             conn.disconnect();
 
-            System.out.println("Client login response: " + response);
-
             if (status < 200 || status >= 300) {
                 System.out.println("Erro no login do cliente!");
                 return null;
