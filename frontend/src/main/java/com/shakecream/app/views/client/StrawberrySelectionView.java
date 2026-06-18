@@ -6,11 +6,13 @@ import com.shakecream.app.services.ProductService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 import java.util.List;
 
 public class StrawberrySelectionView {
@@ -21,65 +23,67 @@ public class StrawberrySelectionView {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FAF6F2;");
 
-        // --- HEADER COM TÍTULO CENTRALIZADO ---
+        // HEADER
         StackPane header = new StackPane();
         header.setPadding(new Insets(0, 30, 0, 30));
         header.setPrefHeight(80);
         header.setStyle("-fx-background-color: #B95C68;");
 
-        Button btnVoltar = new Button("←  Voltar");
+        Button btnVoltar = new Button("← Voltar");
         btnVoltar.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
+                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;");
         btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage, categoryId));
 
         HBox leftBox = new HBox(btnVoltar);
         leftBox.setAlignment(Pos.CENTER_LEFT);
-        leftBox.setPickOnBounds(false);
 
-        Label lbTituloHeader = new Label("Morango");
-        lbTituloHeader.setStyle(
-                "-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
+        Label titulo = new Label("Morango");
+        titulo.setStyle("-fx-text-fill: white; -fx-font-size: 26; -fx-font-weight: bold;");
 
-        header.getChildren().addAll(lbTituloHeader, leftBox);
+        header.getChildren().addAll(titulo, leftBox);
         root.setTop(header);
 
-        // --- LISTA DE PRODUTOS ---
+        // CONTAINER
         VBox listContainer = new VBox(18);
-        listContainer.setPadding(new Insets(40, 0, 40, 0));
+        listContainer.setPadding(new Insets(40));
         listContainer.setAlignment(Pos.TOP_CENTER);
 
-        List<Product> totalProducts = productService.getByCategoryId(categoryId);
+        // Busca os produtos pela categoria
+        List<Product> products = productService.getByCategoryId(categoryId);
+        System.out.println("Produtos encontrados: " + (products != null ? products.size() : "null"));
 
-        if (totalProducts == null || totalProducts.isEmpty()) {
+        if (products == null || products.isEmpty()) {
             Label empty = new Label("Nenhum produto encontrado.");
             listContainer.getChildren().add(empty);
         } else {
-
-            for (Product prod : totalProducts) {
+            for (Product prod : products) {
                 if (prod == null)
                     continue;
 
-                String nome = prod.getName();
-                String description = prod.getDescription();
-                double preco = prod.getPrice();
-                String imagem = prod.getImageUrl();
+                String name = prod.getName();
+                if (name != null && name.toLowerCase().trim().startsWith("morango")) {
 
-                ProductItemCard card = new ProductItemCard(
-                        nome,
-                        description,
-                        "R$ " + String.format("%.2f", preco),
-                        imagem);
+                    String nome = prod.getName();
+                    String description = prod.getDescription();
+                    double preco = prod.getPrice();
+                    String imagem = prod.getImageUrl();
 
-                card.setOnAction(() -> new ProductDetailsView().show(
-                        stage,
-                        nome,
-                        preco,
-                        imagem,
-                        description,
-                        "Bebida",
-                        prod.getCategoryId()));
+                    String imageIsNotNull = (imagem != null && !imagem.trim().isEmpty()) ? imagem
+                            : "morango_tradicional.png";
+                    ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco),
+                            imageIsNotNull);
 
-                listContainer.getChildren().add(card);
+                    card.setOnAction(() -> new ProductDetailsView().show(
+                            stage,
+                            nome,
+                            preco,
+                            imageIsNotNull,
+                            description,
+                            "Morango",
+                            prod.getCategoryId()));
+
+                    listContainer.getChildren().add(card);
+                }
             }
         }
 
@@ -88,6 +92,11 @@ public class StrawberrySelectionView {
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
         root.setCenter(scroll);
-        stage.getScene().setRoot(root);
+
+        if (stage.getScene() == null) {
+            stage.setScene(new Scene(root, 900, 600));
+        } else {
+            stage.getScene().setRoot(root);
+        }
     }
 }
