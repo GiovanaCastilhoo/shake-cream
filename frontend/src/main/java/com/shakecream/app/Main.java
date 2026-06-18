@@ -1,5 +1,6 @@
 package com.shakecream.app;
 
+import com.shakecream.app.views.admin.AdminLoginView;
 import com.shakecream.app.views.client.CategorySelectionView;
 
 import javafx.application.Application;
@@ -17,6 +18,6 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        new CategorySelectionView().show(primaryStage);
+        new AdminLoginView().show(primaryStage);
     }
 }
