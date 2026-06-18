@@ -74,48 +74,59 @@ public class CategorySelectionView {
         List<Category> categories = categoryService.getCategories();
 
         if (categories != null && !categories.isEmpty()) {
+
             for (Category category : categories) {
-                String imageName = category.getName().toLowerCase().contains("bebida") ? "bebidas_categoria.png"
+
+                String name = category.getName();
+                String nameLower = name.toLowerCase();
+
+                boolean isBebida = nameLower.contains("bebida");
+
+                String imageName = isBebida
+                        ? "bebidas_categoria.png"
                         : "milkshake_categoria.png";
-                String description = category.getName().toLowerCase().contains("bebida") ? "Opções para\nrefrescar"
+
+                String description = isBebida
+                        ? "Opções para\nrefrescar"
                         : "Escolha o seu sabor\nfavorito";
 
                 StackPane card = criarCardCategoriaFigma(
-                        category.getName(),
+                        name,
                         description,
                         imageName,
                         e -> {
-                            if (category.getName().toLowerCase().contains("bebida")) {
-                                new DrinkSelectionView().show(stage);
+                            if (isBebida) {
+                                new DrinkSelectionView().show(stage, category.getId());
                             } else {
-                                new FlavorSelectionView().show(stage);
+                                new FlavorSelectionView().show(stage, category.getId());
                             }
                         });
+
                 cardsContainer.getChildren().add(card);
             }
+
         } else {
-            StackPane cardMilkshakes = criarCardCategoriaFigma("Milk-Shakes", "Escolha o seu sabor\nfavorito",
-                    "milkshake_categoria.png", e -> new FlavorSelectionView().show(stage, categoryId));
-            StackPane cardBebidas = criarCardCategoriaFigma("Bebidas", "Opções para\nrefrescar",
-                    "bebidas_categoria.png", e -> new DrinkSelectionView().show(stage, categoryId));
+
+            // fallback APENAS visual (sem ID fixo de lógica crítica)
+
+            StackPane cardMilkshakes = criarCardCategoriaFigma(
+                    "Milk-Shakes",
+                    "Escolha o seu sabor\nfavorito",
+                    "milkshake_categoria.png",
+                    e -> {
+                        System.out.println("Nenhuma categoria do backend para milkshake");
+                    });
+
+            StackPane cardBebidas = criarCardCategoriaFigma(
+                    "Bebidas",
+                    "Opções para\nrefrescar",
+                    "bebidas_categoria.png",
+                    e -> {
+                        System.out.println("Nenhuma categoria do backend para bebidas");
+                    });
+
             cardsContainer.getChildren().addAll(cardMilkshakes, cardBebidas);
         }
-        // CategoryService categoryService = new CategoryService();
-        // List<Category> categories = categoryService.getCategories();
-
-        // cardsContainer.getChildren().clear();
-
-        // for (Category category : categories) {
-
-        // String name = category.getName();
-
-        // StackPane card = criarCardCategoria(
-        // name,
-        // getImagemPorCategoria(name),
-        // e -> abrirTelaPorCategoria(category, stage));
-
-        // cardsContainer.getChildren().add(card);
-        // }
 
         centerWrapper.getChildren().addAll(lbTituloPrincipal, cardsContainer);
         root.setCenter(centerWrapper);
@@ -128,19 +139,6 @@ public class CategorySelectionView {
         cardRoot.setCursor(javafx.scene.Cursor.HAND);
         cardRoot.setStyle(
                 "-fx-background-color: white; -fx-background-radius: 30; -fx-border-color: #E2DDD9; -fx-border-radius: 30; -fx-border-width: 1; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.02), 15, 0, 0, 6);");
-        // Método que desenha o card exatamente igual ao design do Figma (Horizontal com
-        // imagem e textos)
-        // private StackPane criarCardCategoria(String titulo, String imageName,
-        // javafx.event.EventHandler<javafx.scene.input.MouseEvent> clickEvent) {
-        // StackPane cardRoot = new StackPane();
-        // cardRoot.setCursor(javafx.scene.Cursor.HAND);
-        // cardRoot.setStyle(
-        // "-fx-background-color: white;" +
-        // "-fx-background-radius: 30;" +
-        // "-fx-border-color: #E2DDD9;" +
-        // "-fx-border-radius: 30;" +
-        // "-fx-border-width: 1;" +
-        // "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.02), 15, 0, 0, 6);");
         cardRoot.setPrefSize(460, 220);
         cardRoot.setMaxSize(460, 220);
         cardRoot.setOnMouseClicked(clickEvent);
@@ -214,34 +212,4 @@ public class CategorySelectionView {
         return cardRoot;
     }
 
-    private void abrirTelaPorCategoria(Category category, Stage stage) {
-        String nameCategory = category.getName().toLowerCase().trim();
-        int categoryId = category.getId();
-
-        if (nameCategory.startsWith("milk")) {
-            new FlavorSelectionView().show(stage, categoryId);
-
-        } else if (nameCategory.startsWith("bebida")) {
-            new DrinkSelectionView().show(stage, categoryId);
-
-        }
-    }
-
-    private String getImagemPorCategoria(String name) {
-        String nameCategory = name.toLowerCase().trim();
-
-        if (nameCategory.startsWith("milk")) {
-            return "milkshake_categoria.png";
-
-        } else if (nameCategory.startsWith("bebida")) {
-            return "bebidas_categoria.png";
-
-        } else {
-            return "default.png";
-        }
-    }
-
-    public static void main(String[] args) {
-        javafx.application.Application.launch(HelloApplication.class, args);
-    }
 }

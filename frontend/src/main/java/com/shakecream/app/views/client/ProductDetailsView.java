@@ -291,27 +291,27 @@ public class ProductDetailsView {
                 flowAdicionaisRapidos.getChildren().add(cardMais);
         }
 
-        private StackPane createAdicionalHorizontalCard(Additional ad) {
+        private StackPane createAdicionalHorizontalCard(Additional additional) {
                 StackPane container = new StackPane();
                 VBox box = new VBox(3);
                 box.setAlignment(Pos.CENTER);
                 box.setPrefSize(125, 75);
-                box.setStyle(ad.isSelecionado()
+                box.setStyle(additional.isSelected()
                                 ? "-fx-background-color: #F8D7DA; -fx-border-color: " + Theme.COLOR_PRIMARY
                                                 + "; -fx-background-radius: 15; -fx-border-radius: 15;"
                                 : "-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-background-radius: 15; -fx-border-radius: 15;");
 
-                Label l1 = new Label(ad.getName().toUpperCase());
+                Label l1 = new Label(additional.getName().toUpperCase());
                 l1.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 11;");
-                Label l2 = new Label("R$ " + String.format("%.2f", ad.getPrice()));
-                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 11; -fx-text-fill: " + COLOR_TEXT_MUTED
+                Label l2 = new Label("R$ " + String.format("%.2f", additional.getPrice()));
+                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 11; -fx-text-fill: " + Theme.COLOR_TEXT_MUTED
                                 + ";");
                 box.getChildren().addAll(l1, l2);
 
                 Label checkMark = new Label("✓");
                 checkMark.setStyle("-fx-text-fill: " + Theme.COLOR_PRIMARY
                                 + "; -fx-font-weight: bold; -fx-font-size: 14;");
-                checkMark.setVisible(ad.isSelecionado());
+                checkMark.setVisible(additional.isSelected());
                 StackPane.setAlignment(checkMark, Pos.TOP_LEFT);
                 StackPane.setMargin(checkMark, new Insets(6, 0, 0, 10));
 
@@ -319,7 +319,7 @@ public class ProductDetailsView {
                 container.setCursor(javafx.scene.Cursor.HAND);
 
                 container.setOnMouseClicked(e -> {
-                        ad.setSelecionado(!ad.isSelecionado());
+                        additional.setSelected(!additional.isSelected());
                         atualizarValores();
                         renderAdicionaisFigmaMenu();
                 });
@@ -350,22 +350,22 @@ public class ProductDetailsView {
                         row.setStyle("-fx-border-color: #F0EDE9; -fx-border-width: 0 0 1 0;");
 
                         CheckBox cb = new CheckBox();
-                        cb.setSelected(ad.isSelecionado());
+                        cb.setSelected(ad.isSelected());
 
                         Label name = new Label(ad.getName());
                         name.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 14; -fx-font-weight: bold;");
                         Region sp = new Region();
                         HBox.setHgrow(sp, Priority.ALWAYS);
                         Label pr = new Label("+ R$ " + String.format("%.2f", ad.getPrice()));
-                        pr.setStyle("-fx-font-family: 'Montserrat'; -fx-text-fill: " + COLOR_PRIMARY + ";");
+                        pr.setStyle("-fx-font-family: 'Montserrat'; -fx-text-fill: " + Theme.COLOR_PRIMARY + ";");
 
                         row.getChildren().addAll(cb, name, sp, pr);
                         row.setCursor(javafx.scene.Cursor.HAND);
                         row.setOnMouseClicked(e -> {
                                 cb.setSelected(!cb.isSelected());
-                                ad.setSelecionado(cb.isSelected());
+                                ad.setSelected(cb.isSelected());
                         });
-                        cb.setOnAction(e -> ad.setSelecionado(cb.isSelected()));
+                        cb.setOnAction(e -> ad.setSelected(cb.isSelected()));
 
                         listContent.getChildren().add(row);
                 }
@@ -392,7 +392,7 @@ public class ProductDetailsView {
 
         private void atualizarValores() {
                 double extraTam = (acrescimoTamanho == -1.0) ? 0.00 : acrescimoTamanho;
-                double somaAdicionais = todosAdicionais.stream().filter(Additional::isSelecionado)
+                double somaAdicionais = todosAdicionais.stream().filter(Additional::isSelected)
                                 .mapToDouble(Additional::getPrice).sum();
                 double total = (precoProdutoBase + extraTam + somaAdicionais) * quantidade;
 
@@ -406,19 +406,24 @@ public class ProductDetailsView {
                 } else {
                         switch (categoriaSabor.toLowerCase()) {
                                 case "morango":
-                                        new com.shakecream.app.views.client.StrawberrySelectionView().show(stage);
+                                        new com.shakecream.app.views.client.StrawberrySelectionView().show(stage,
+                                                        categoryId);
                                         break;
                                 case "chocolate":
-                                        new com.shakecream.app.views.client.ChocolateSelectionView().show(stage);
+                                        new com.shakecream.app.views.client.ChocolateSelectionView().show(stage,
+                                                        categoryId);
                                         break;
                                 case "baunilha":
-                                        new com.shakecream.app.views.client.VanillaSelectionView().show(stage);
+                                        new com.shakecream.app.views.client.VanillaSelectionView().show(stage,
+                                                        categoryId);
                                         break;
                                 case "especiais":
-                                        new com.shakecream.app.views.client.SpecialSelectionView().show(stage);
+                                        new com.shakecream.app.views.client.SpecialSelectionView().show(stage,
+                                                        categoryId);
                                         break;
                                 default:
-                                        new com.shakecream.app.views.client.FlavorSelectionView().show(stage);
+                                        new com.shakecream.app.views.client.FlavorSelectionView().show(stage,
+                                                        categoryId);
                                         break;
                         }
                 }
@@ -433,7 +438,7 @@ public class ProductDetailsView {
                         }
                 }
 
-                List<Additional> extrasSalvos = todosAdicionais.stream().filter(Additional::isSelecionado)
+                List<Additional> extrasSalvos = todosAdicionais.stream().filter(Additional::isSelected)
                                 .collect(Collectors.toList());
                 double extraTamCalculo = (acrescimoTamanho == -1.0) ? 0.00 : acrescimoTamanho;
                 double precoFinalCalculado = (precoProdutoBase + extraTamCalculo

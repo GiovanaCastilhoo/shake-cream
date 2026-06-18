@@ -33,7 +33,6 @@ public class AuthService {
             String response = scanner.useDelimiter("\\A").next();
             scanner.close();
 
-            System.out.println("RESPONSE: " + response);
             return gson.fromJson(response, LoginResponse.class);
 
         } catch (Exception e) {
