@@ -17,7 +17,7 @@ public class DrinkSelectionView {
 
     private final ProductService productService = new ProductService();
 
-    public void show(Stage stage) {
+    public void show(Stage stage, int categoryId) {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FAF6F2;");
 
@@ -28,8 +28,10 @@ public class DrinkSelectionView {
         header.setStyle("-fx-background-color: #B95C68;");
 
         Button btnVoltar = new Button("←  Voltar");
-        btnVoltar.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
-        // Ajuste aqui caso o botão voltar das bebidas precise ir para a CategorySelectionView ao invés de sabores
+        btnVoltar.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
+        // Ajuste aqui caso o botão voltar das bebidas precise ir para a
+        // CategorySelectionView ao invés de sabores
         btnVoltar.setOnAction(e -> new CategorySelectionView().show(stage));
 
         HBox leftBox = new HBox(btnVoltar);
@@ -37,7 +39,8 @@ public class DrinkSelectionView {
         leftBox.setPickOnBounds(false);
 
         Label lbTituloHeader = new Label("Bebidas");
-        lbTituloHeader.setStyle("-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
+        lbTituloHeader.setStyle(
+                "-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
 
         header.getChildren().addAll(lbTituloHeader, leftBox);
         root.setTop(header);
@@ -53,21 +56,23 @@ public class DrinkSelectionView {
         if (totalProducts != null) {
             for (int i = 0; i < totalProducts.size(); i++) {
                 Product prod = totalProducts.get(i);
-                if (prod == null) continue;
+                if (prod == null)
+                    continue;
 
                 // Filtrando apenas por Bebidas
                 if (prod.getCategoryName() != null && prod.getCategoryName().equalsIgnoreCase("Bebida")) {
-                    
+
                     String nome = prod.getName();
                     String description = prod.getDescription();
                     double preco = prod.getPrice();
                     String imagem = prod.getImageUrl();
 
-                    ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco), imagem);
+                    ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco),
+                            imagem);
 
-                    card.setOnAction(() ->
-                            new ProductDetailsView().show(stage, nome, preco, imagem, description, "Bebida")
-                    );
+                    card.setOnAction(
+                            () -> new ProductDetailsView().show(stage, nome, preco, imagem, description, "Bebida",
+                                    categoryId));
 
                     listContainer.getChildren().add(card);
                 }

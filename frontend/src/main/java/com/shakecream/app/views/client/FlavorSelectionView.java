@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class FlavorSelectionView {
 
-        public void show(Stage stage) {
+        public void show(Stage stage, int categoryId) {
                 BorderPane root = new BorderPane();
                 root.setStyle("-fx-background-color: " + Theme.COLOR_BG_WORKSPACE + ";");
 
@@ -53,10 +53,10 @@ public class FlavorSelectionView {
                 FlavorCard cardBaunilha = new FlavorCard("Baunilha", "Leves e\ncremosos", "baunilha.png", "#3E2723");
                 FlavorCard cardEspeciais = new FlavorCard("Especiais", "Combinações\nincríveis", "especiais.png",
                                 "#3E2723");
-                cardChocolate.setOnAction(() -> new ChocolateSelectionView().show(stage));
-                cardMorango.setOnAction(() -> new StrawberrySelectionView().show(stage));
-                cardBaunilha.setOnAction(() -> new VanillaSelectionView().show(stage));
-                cardEspeciais.setOnAction(() -> new SpecialSelectionView().show(stage));
+                cardChocolate.setOnAction(() -> new ChocolateSelectionView().show(stage, categoryId));
+                cardMorango.setOnAction(() -> new StrawberrySelectionView().show(stage, categoryId));
+                cardBaunilha.setOnAction(() -> new VanillaSelectionView().show(stage, categoryId));
+                cardEspeciais.setOnAction(() -> new SpecialSelectionView().show(stage, categoryId));
 
                 grid.add(cardChocolate, 0, 0);
                 grid.add(cardMorango, 1, 0);

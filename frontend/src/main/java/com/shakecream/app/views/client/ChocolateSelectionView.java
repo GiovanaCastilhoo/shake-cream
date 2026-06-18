@@ -19,7 +19,7 @@ public class ChocolateSelectionView {
 
   private final ProductService productService = new ProductService();
 
-  public void show(Stage stage) {
+  public void show(Stage stage, int categoryId) {
     BorderPane root = new BorderPane();
     root.setStyle("-fx-background-color: #FAF6F2;");
 
@@ -32,7 +32,7 @@ public class ChocolateSelectionView {
     Button btnVoltar = new Button("← Voltar");
     btnVoltar.setStyle(
         "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;");
-    btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage));
+    btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage, categoryId));
 
     HBox leftBox = new HBox(btnVoltar);
     leftBox.setAlignment(Pos.CENTER_LEFT);
@@ -48,7 +48,7 @@ public class ChocolateSelectionView {
     listContainer.setPadding(new Insets(40));
     listContainer.setAlignment(Pos.TOP_CENTER);
 
-    List<Product> products = productService.getAll();
+    List<Product> products = productService.getByCategoryId(categoryId);
 
     if (products == null || products.isEmpty()) {
       Label empty = new Label("Nenhum produto encontrado.");
@@ -57,13 +57,6 @@ public class ChocolateSelectionView {
 
       for (Product prod : products) {
         if (prod == null)
-          continue;
-
-        String category = prod.getCategoryName();
-
-        System.out.println("CATEGORY RAW: [" + category + "]");
-
-        if (category == null)
           continue;
 
         String name = prod.getName();
@@ -87,7 +80,8 @@ public class ChocolateSelectionView {
               preco,
               imagem,
               description,
-              "Chocolate"));
+              "Chocolate",
+              prod.getCategoryId()));
 
           listContainer.getChildren().add(card);
         }

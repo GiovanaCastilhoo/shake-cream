@@ -88,7 +88,7 @@ public class CategorySelectionView {
             StackPane card = criarCardCategoria(
                     name,
                     getImagemPorCategoria(name),
-                    e -> abrirTelaPorCategoria(name, stage));
+                    e -> abrirTelaPorCategoria(category, stage));
 
             cardsContainer.getChildren().add(card);
         }
@@ -188,17 +188,16 @@ public class CategorySelectionView {
         return cardRoot;
     }
 
-    private void abrirTelaPorCategoria(String name, Stage stage) {
-        String nameCategory = name.toLowerCase().trim();
+    private void abrirTelaPorCategoria(Category category, Stage stage) {
+        String nameCategory = category.getName().toLowerCase().trim();
+        int categoryId = category.getId();
 
         if (nameCategory.startsWith("milk")) {
-            new FlavorSelectionView().show(stage);
+            new FlavorSelectionView().show(stage, categoryId);
 
         } else if (nameCategory.startsWith("bebida")) {
-            new DrinkSelectionView().show(stage);
+            new DrinkSelectionView().show(stage, categoryId);
 
-        } else {
-            System.out.println("Categoria sem tela: " + name);
         }
     }
 
