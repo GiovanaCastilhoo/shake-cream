@@ -2,8 +2,10 @@ package com.shakecream.app.views.client;
 
 import com.shakecream.app.models.Additional;
 import com.shakecream.app.models.ItemCarrinho;
+import com.shakecream.app.services.AdditionalService;
 import com.shakecream.app.state.CarrinhoGlobal;
 import com.shakecream.app.ui.AdditionalItem;
+import com.shakecream.app.ui.Theme;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,22 +14,20 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductDetailsView {
 
-        private final String COLOR_PRIMARY = "#B95C68";
-        private final String COLOR_BG = "#FAF6F2";
-        private final String COLOR_TEXT_DARK = "#4A3B37";
-        private final String COLOR_TEXT_MUTED = "#8E8A85";
+        private final AdditionalService additionalService = new AdditionalService();
 
         private int quantidade = 1;
         private double precoProdutoBase;
         private double acrescimoTamanho = -1.0;
         private String tamanhoSelecionado = "";
-        private final List<AdditionalItem> additionalsUI = new ArrayList<>();
+        private final List<Additional> todosAdicionais = new ArrayList<>();
         private boolean ehBebida = false;
         private String pathImagem;
         private String categoriaSabor = "Geral";
@@ -74,12 +74,11 @@ public class ProductDetailsView {
                 this.rootStack = new StackPane();
 
                 BorderPane mainLayout = new BorderPane();
-                mainLayout.setStyle("-fx-background-color: " + COLOR_BG + ";");
+                mainLayout.setStyle("-fx-background-color: " + Theme.COLOR_BG_WORKSPACE + ";");
 
-                // --- HEADER ---
                 StackPane header = new StackPane();
                 header.setPrefHeight(80);
-                header.setStyle("-fx-background-color: " + COLOR_PRIMARY + ";");
+                header.setStyle("-fx-background-color: " + Theme.COLOR_PRIMARY + ";");
                 header.setPadding(new Insets(0, 30, 0, 30));
 
                 Button btnVoltar = new Button("←  Voltar");
@@ -95,12 +94,10 @@ public class ProductDetailsView {
                 header.getChildren().addAll(lbTituloHeader, btnVoltar);
                 mainLayout.setTop(header);
 
-                // --- CORPO CENTRAL ---
                 HBox contentBox = new HBox(55);
                 contentBox.setPadding(new Insets(40, 60, 40, 60));
                 contentBox.setAlignment(Pos.CENTER);
 
-                // COLUNA ESQUERDA
                 VBox colEsquerda = new VBox(25);
                 colEsquerda.setAlignment(Pos.CENTER);
 
@@ -129,7 +126,7 @@ public class ProductDetailsView {
                 Button btnMinus = new Button("-");
                 btnMinus.setStyle(
                                 "-fx-background-color: transparent; -fx-font-family: 'Montserrat'; -fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK + "; -fx-cursor: hand; -fx-min-width: 35;");
+                                                + Theme.COLOR_TEXT_DARK + "; -fx-cursor: hand; -fx-min-width: 35;");
                 btnMinus.setOnAction(e -> {
                         if (quantidade > 1) {
                                 quantidade--;
@@ -140,12 +137,12 @@ public class ProductDetailsView {
                 lbQuantidade = new Label("1");
                 lbQuantidade.setStyle(
                                 "-fx-font-family: 'Montserrat'; -fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK + ";");
+                                                + Theme.COLOR_TEXT_DARK + ";");
 
                 Button btnPlus = new Button("+");
                 btnPlus.setStyle(
                                 "-fx-background-color: transparent; -fx-font-family: 'Montserrat'; -fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK + "; -fx-cursor: hand; -fx-min-width: 35;");
+                                                + Theme.COLOR_TEXT_DARK + "; -fx-cursor: hand; -fx-min-width: 35;");
                 btnPlus.setOnAction(e -> {
                         quantidade++;
                         atualizarValores();
@@ -156,17 +153,16 @@ public class ProductDetailsView {
                 lbPrecoTotal = new Label("R$ 0,00");
                 lbPrecoTotal.setStyle(
                                 "-fx-font-family: 'Montserrat'; -fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_PRIMARY + ";");
+                                                + Theme.COLOR_PRIMARY + ";");
 
                 Button btnAdicionarAoCarrinho = new Button("ADICIONAR");
                 btnAdicionarAoCarrinho.setPrefSize(280, 55);
-                btnAdicionarAoCarrinho.setStyle("-fx-background-color: " + COLOR_PRIMARY
+                btnAdicionarAoCarrinho.setStyle("-fx-background-color: " + Theme.COLOR_PRIMARY
                                 + "; -fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 14; -fx-cursor: hand;");
                 btnAdicionarAoCarrinho.setOnAction(e -> processarESalvarPedido(stage, nomeProduto));
 
                 colEsquerda.getChildren().addAll(imgWrapper, counterBox, lbPrecoTotal, btnAdicionarAoCarrinho);
 
-                // COLUNA DIREITA
                 VBox colDireita = new VBox(20);
                 colDireita.setPrefWidth(550);
 
@@ -174,17 +170,17 @@ public class ProductDetailsView {
                 lbNome.setWrapText(true);
                 lbNome.setMaxWidth(550);
                 lbNome.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: "
-                                + COLOR_TEXT_DARK + ";");
+                                + Theme.COLOR_TEXT_DARK + ";");
 
                 Label lbDescricao = new Label(descricaoProduto);
                 lbDescricao
                                 .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 15; -fx-text-fill: "
-                                                + COLOR_TEXT_MUTED + ";");
+                                                + Theme.COLOR_TEXT_MUTED + ";");
 
                 Label lbPrecoBase = new Label("R$ " + String.format("%.2f", precoProdutoBase));
                 lbPrecoBase.setStyle(
                                 "-fx-font-family: 'Montserrat'; -fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_PRIMARY + ";");
+                                                + Theme.COLOR_PRIMARY + ";");
 
                 colDireita.getChildren().addAll(lbNome, lbDescricao, lbPrecoBase);
 
@@ -192,7 +188,7 @@ public class ProductDetailsView {
                         Label lbTituloTamanho = new Label("ESCOLHA O TAMANHO *");
                         lbTituloTamanho
                                         .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: "
-                                                        + COLOR_TEXT_MUTED + ";");
+                                                        + Theme.COLOR_TEXT_MUTED + ";");
 
                         HBox boxTamanhosLayout = new HBox(15);
                         cardP = renderSizeCard("P", "300 ml", 0.00);
@@ -203,22 +199,22 @@ public class ProductDetailsView {
                         Label lbTituloAdicionais = new Label("ADICIONAIS (opcional)");
                         lbTituloAdicionais
                                         .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: "
-                                                        + COLOR_TEXT_MUTED + ";");
+                                                        + Theme.COLOR_TEXT_MUTED + ";");
 
                         flowAdicionaisRapidos = new HBox(12);
                         flowAdicionaisRapidos.setAlignment(Pos.CENTER_LEFT);
+                        inicializarBancoAdicionais();
                         renderAdicionaisFigmaMenu();
 
                         Label lbTituloObs = new Label("OBSERVAÇÕES (opcional)");
                         lbTituloObs
                                         .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: "
-                                                        + COLOR_TEXT_MUTED + ";");
+                                                        + Theme.COLOR_TEXT_MUTED + ";");
 
                         txtObs = new TextArea();
                         txtObs.setPromptText("Ex: Sem açúcar, pouca cobertura...");
                         txtObs.setPrefHeight(90);
-                        txtObs.setStyle(
-                                        "-fx-control-inner-background: white; -fx-font-family: 'Montserrat'; -fx-font-size: 14; -fx-background-radius: 12; -fx-border-color: #E0DDD9; -fx-border-radius: 12;");
+                        txtObs.setStyle("-fx-control-inner-background: white; -fx-font-family: 'Montserrat'; -fx-font-size: 14; -fx-background-radius: 12; -fx-border-color: #E0DDD9; -fx-border-radius: 12;");
 
                         colDireita.getChildren().addAll(lbTituloTamanho, boxTamanhosLayout, lbTituloAdicionais,
                                         flowAdicionaisRapidos, lbTituloObs, txtObs);
@@ -237,16 +233,15 @@ public class ProductDetailsView {
                 box.setAlignment(Pos.CENTER);
                 box.setPrefSize(120, 95);
                 box.setCursor(javafx.scene.Cursor.HAND);
-                box.setStyle(
-                                "-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-border-radius: 15; -fx-background-radius: 15;");
+                box.setStyle("-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-border-radius: 15; -fx-background-radius: 15;");
 
                 Label l1 = new Label(label);
                 l1.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 18;");
                 Label l2 = new Label(ml);
-                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_MUTED
+                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + Theme.COLOR_TEXT_MUTED
                                 + ";");
                 Label l3 = new Label("R$ " + String.format("%.2f", valorExtra));
-                l3.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_DARK
+                l3.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + Theme.COLOR_TEXT_DARK
                                 + ";");
 
                 box.getChildren().addAll(l1, l2, l3);
@@ -255,14 +250,11 @@ public class ProductDetailsView {
                         tamanhoSelecionado = label;
                         acrescimoTamanho = valorExtra;
 
-                        cardP.setStyle(
-                                        "-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-border-radius: 15; -fx-background-radius: 15;");
-                        cardM.setStyle(
-                                        "-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-border-radius: 15; -fx-background-radius: 15;");
-                        cardG.setStyle(
-                                        "-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-border-radius: 15; -fx-background-radius: 15;");
+                        cardP.setStyle("-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-border-radius: 15; -fx-background-radius: 15;");
+                        cardM.setStyle("-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-border-radius: 15; -fx-background-radius: 15;");
+                        cardG.setStyle("-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-border-radius: 15; -fx-background-radius: 15;");
 
-                        box.setStyle("-fx-background-color: #F8D7DA; -fx-border-color: " + COLOR_PRIMARY
+                        box.setStyle("-fx-background-color: #F8D7DA; -fx-border-color: " + Theme.COLOR_PRIMARY
                                         + "; -fx-border-radius: 15; -fx-background-radius: 15;");
                         atualizarValores();
                 });
@@ -271,17 +263,16 @@ public class ProductDetailsView {
         }
 
         private void renderAdicionaisFigmaMenu() {
-
                 flowAdicionaisRapidos.getChildren().clear();
 
-                if (additionalsUI == null || additionalsUI.size() < 4) {
-                        System.out.println("Adicionais insuficientes para renderização.");
-                        return;
+                if (!todosAdicionais.isEmpty()) {
+                        if (todosAdicionais.size() > 0)
+                                flowAdicionaisRapidos.getChildren()
+                                                .add(createAdicionalHorizontalCard(todosAdicionais.get(0)));
+                        if (todosAdicionais.size() > 1)
+                                flowAdicionaisRapidos.getChildren()
+                                                .add(createAdicionalHorizontalCard(todosAdicionais.get(1)));
                 }
-
-                flowAdicionaisRapidos.getChildren().addAll(
-                                createAdicionalHorizontalCard(additionalsUI.get(3)),
-                                createAdicionalHorizontalCard(additionalsUI.get(0)));
 
                 VBox cardMais = new VBox();
                 cardMais.setAlignment(Pos.CENTER);
@@ -292,34 +283,35 @@ public class ProductDetailsView {
 
                 Label lbMais = new Label("+ MAIS");
                 lbMais.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: "
-                                + COLOR_TEXT_DARK + ";");
+                                + Theme.COLOR_TEXT_DARK + ";");
 
                 cardMais.getChildren().add(lbMais);
-                cardMais.setOnMouseClicked(e -> abrirMenuScrollVerticalAdicionais());
 
+                cardMais.setOnMouseClicked(e -> abrirMenuScrollVerticalAdicionais());
                 flowAdicionaisRapidos.getChildren().add(cardMais);
         }
 
-        private StackPane createAdicionalHorizontalCard(AdditionalItem ad) {
+        private StackPane createAdicionalHorizontalCard(Additional additional) {
                 StackPane container = new StackPane();
                 VBox box = new VBox(3);
                 box.setAlignment(Pos.CENTER);
                 box.setPrefSize(125, 75);
-                box.setStyle(ad.isSelecionado()
-                                ? "-fx-background-color: #F8D7DA; -fx-border-color: " + COLOR_PRIMARY
+                box.setStyle(additional.isSelected()
+                                ? "-fx-background-color: #F8D7DA; -fx-border-color: " + Theme.COLOR_PRIMARY
                                                 + "; -fx-background-radius: 15; -fx-border-radius: 15;"
                                 : "-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-background-radius: 15; -fx-border-radius: 15;");
 
-                Label l1 = new Label(ad.getAdditional().getName().toUpperCase());
+                Label l1 = new Label(additional.getName().toUpperCase());
                 l1.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 11;");
-                Label l2 = new Label("R$ " + String.format("%.2f", ad.getAdditional().getPrice()));
-                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 11; -fx-text-fill: " + COLOR_TEXT_MUTED
+                Label l2 = new Label("R$ " + String.format("%.2f", additional.getPrice()));
+                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 11; -fx-text-fill: " + Theme.COLOR_TEXT_MUTED
                                 + ";");
                 box.getChildren().addAll(l1, l2);
 
                 Label checkMark = new Label("✓");
-                checkMark.setStyle("-fx-text-fill: " + COLOR_PRIMARY + "; -fx-font-weight: bold; -fx-font-size: 14;");
-                checkMark.setVisible(ad.isSelecionado());
+                checkMark.setStyle("-fx-text-fill: " + Theme.COLOR_PRIMARY
+                                + "; -fx-font-weight: bold; -fx-font-size: 14;");
+                checkMark.setVisible(additional.isSelected());
                 StackPane.setAlignment(checkMark, Pos.TOP_LEFT);
                 StackPane.setMargin(checkMark, new Insets(6, 0, 0, 10));
 
@@ -327,7 +319,7 @@ public class ProductDetailsView {
                 container.setCursor(javafx.scene.Cursor.HAND);
 
                 container.setOnMouseClicked(e -> {
-                        ad.setSelecionado(!ad.isSelecionado());
+                        additional.setSelected(!additional.isSelected());
                         atualizarValores();
                         renderAdicionaisFigmaMenu();
                 });
@@ -348,41 +340,36 @@ public class ProductDetailsView {
                 Label titleModal = new Label("Selecione os Adicionais");
                 titleModal.setStyle(
                                 "-fx-font-family: 'Montserrat'; -fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK + ";");
+                                                + Theme.COLOR_TEXT_DARK + ";");
 
                 VBox listContent = new VBox(10);
-                for (AdditionalItem ad : additionalsUI) {
-
-                        Additional data = ad.getAdditional();
-
+                for (Additional ad : todosAdicionais) {
                         HBox row = new HBox(15);
                         row.setAlignment(Pos.CENTER_LEFT);
                         row.setPadding(new Insets(8));
                         row.setStyle("-fx-border-color: #F0EDE9; -fx-border-width: 0 0 1 0;");
 
                         CheckBox cb = new CheckBox();
-                        cb.setSelected(ad.isSelecionado());
+                        cb.setSelected(ad.isSelected());
 
-                        Label name = new Label(data.getName());
+                        Label name = new Label(ad.getName());
                         name.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 14; -fx-font-weight: bold;");
-
                         Region sp = new Region();
                         HBox.setHgrow(sp, Priority.ALWAYS);
-
-                        Label pr = new Label("+ R$ " + String.format("%.2f", data.getPrice()));
-                        pr.setStyle("-fx-font-family: 'Montserrat'; -fx-text-fill: " + COLOR_PRIMARY + ";");
+                        Label pr = new Label("+ R$ " + String.format("%.2f", ad.getPrice()));
+                        pr.setStyle("-fx-font-family: 'Montserrat'; -fx-text-fill: " + Theme.COLOR_PRIMARY + ";");
 
                         row.getChildren().addAll(cb, name, sp, pr);
-
+                        row.setCursor(javafx.scene.Cursor.HAND);
                         row.setOnMouseClicked(e -> {
                                 cb.setSelected(!cb.isSelected());
-                                ad.setSelecionado(cb.isSelected());
+                                ad.setSelected(cb.isSelected());
                         });
-
-                        cb.setOnAction(e -> ad.setSelecionado(cb.isSelected()));
+                        cb.setOnAction(e -> ad.setSelected(cb.isSelected()));
 
                         listContent.getChildren().add(row);
                 }
+
                 ScrollPane scrollModal = new ScrollPane(listContent);
                 scrollModal.setFitToWidth(true);
                 scrollModal.setStyle("-fx-background: white; -fx-background-color: white;");
@@ -390,7 +377,7 @@ public class ProductDetailsView {
                 Button btnSalvarModal = new Button("CONFIRMAR SELEÇÃO");
                 btnSalvarModal.setMaxWidth(Double.MAX_VALUE);
                 btnSalvarModal.setPrefHeight(45);
-                btnSalvarModal.setStyle("-fx-background-color: " + COLOR_PRIMARY
+                btnSalvarModal.setStyle("-fx-background-color: " + Theme.COLOR_PRIMARY
                                 + "; -fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;");
                 btnSalvarModal.setOnAction(e -> {
                         rootStack.getChildren().remove(glassPane);
@@ -404,14 +391,9 @@ public class ProductDetailsView {
         }
 
         private void atualizarValores() {
-
                 double extraTam = (acrescimoTamanho == -1.0) ? 0.00 : acrescimoTamanho;
-
-                double somaAdicionais = additionalsUI.stream()
-                                .filter(AdditionalItem::isSelecionado)
-                                .mapToDouble(a -> a.getAdditional().getPrice())
-                                .sum();
-
+                double somaAdicionais = todosAdicionais.stream().filter(Additional::isSelected)
+                                .mapToDouble(Additional::getPrice).sum();
                 double total = (precoProdutoBase + extraTam + somaAdicionais) * quantidade;
 
                 lbQuantidade.setText(String.valueOf(quantidade));
@@ -424,59 +406,48 @@ public class ProductDetailsView {
                 } else {
                         switch (categoriaSabor.toLowerCase()) {
                                 case "morango":
-                                        new StrawberrySelectionView().show(stage, categoryId);
+                                        new com.shakecream.app.views.client.StrawberrySelectionView().show(stage,
+                                                        categoryId);
                                         break;
                                 case "chocolate":
-                                        new ChocolateSelectionView().show(stage, categoryId);
+                                        new com.shakecream.app.views.client.ChocolateSelectionView().show(stage,
+                                                        categoryId);
                                         break;
                                 case "baunilha":
-                                        new VanillaSelectionView().show(stage, categoryId);
+                                        new com.shakecream.app.views.client.VanillaSelectionView().show(stage,
+                                                        categoryId);
                                         break;
                                 case "especiais":
-                                        new SpecialSelectionView().show(stage, categoryId);
+                                        new com.shakecream.app.views.client.SpecialSelectionView().show(stage,
+                                                        categoryId);
                                         break;
                                 default:
-                                        new FlavorSelectionView().show(stage, categoryId);
+                                        new com.shakecream.app.views.client.FlavorSelectionView().show(stage,
+                                                        categoryId);
                                         break;
                         }
                 }
         }
 
         private void processarESalvarPedido(Stage stage, String nomeProduto) {
+                if (!ehBebida) {
+                        if (tamanhoSelecionado.isEmpty()) {
+                                exibirAlertaAviso("Tamanho Obrigatório",
+                                                "Por favor, selecione um tamanho (P, M ou G) antes de prosseguir.");
+                                return;
+                        }
+                }
 
-                // if (!ehBebida) {
-                // if (tamanhoSelecionado.isEmpty()) {
-                // exibirAlertaAviso("Tamanho Obrigatório",
-                // "Por favor, selecione um tamanho (P, M ou G) antes de prosseguir.");
-                // return;
-                // }
-                // }
-
-                List<Additional> extrasSalvos = additionalsUI.stream()
-                                .filter(AdditionalItem::isSelecionado)
-                                .map(AdditionalItem::getAdditional)
+                List<Additional> extrasSalvos = todosAdicionais.stream().filter(Additional::isSelected)
                                 .collect(Collectors.toList());
-
                 double extraTamCalculo = (acrescimoTamanho == -1.0) ? 0.00 : acrescimoTamanho;
-
                 double precoFinalCalculado = (precoProdutoBase + extraTamCalculo
-                                + additionalsUI.stream()
-                                                .filter(AdditionalItem::isSelecionado)
-                                                .mapToDouble(a -> a.getAdditional().getPrice())
-                                                .sum())
-                                * quantidade;
+                                + extrasSalvos.stream().mapToDouble(Additional::getPrice).sum()) * quantidade;
 
                 String observacaoSalva = (txtObs != null) ? txtObs.getText() : "";
 
-                ItemCarrinho novoPedido = new ItemCarrinho(
-                                nomeProduto,
-                                tamanhoSelecionado,
-                                extrasSalvos,
-                                observacaoSalva,
-                                quantidade,
-                                precoFinalCalculado,
-                                pathImagem);
-
+                ItemCarrinho novoPedido = new ItemCarrinho(nomeProduto, tamanhoSelecionado, extrasSalvos,
+                                observacaoSalva, quantidade, precoFinalCalculado, pathImagem);
                 CarrinhoGlobal.getInstancia().adicionarItem(novoPedido);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -485,6 +456,27 @@ public class ProductDetailsView {
                 alert.setContentText(nomeProduto + " foi adicionado e salvo com sucesso!");
                 alert.showAndWait();
 
-                new CategorySelectionView().show(stage);
+                new com.shakecream.app.views.client.CategorySelectionView().show(stage);
+        }
+
+        private void exibirAlertaAviso(String titulo, String mensagem) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle(titulo);
+                alert.setHeaderText(null);
+                alert.setContentText(mensagem);
+                alert.showAndWait();
+        }
+
+        private void inicializarBancoAdicionais() {
+                if (todosAdicionais.isEmpty()) {
+                        try {
+                                List<Additional> adicionaisDoBanco = additionalService.getAdditionals();
+                                if (adicionaisDoBanco != null) {
+                                        todosAdicionais.addAll(adicionaisDoBanco);
+                                }
+                        } catch (Exception e) {
+                                e.printStackTrace();
+                        }
+                }
         }
 }

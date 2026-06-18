@@ -21,7 +21,6 @@ public class DrinkSelectionView {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FAF6F2;");
 
-        // --- HEADER COM TÍTULO CENTRALIZADO ---
         StackPane header = new StackPane();
         header.setPadding(new Insets(0, 30, 0, 30));
         header.setPrefHeight(80);
@@ -30,8 +29,6 @@ public class DrinkSelectionView {
         Button btnVoltar = new Button("←  Voltar");
         btnVoltar.setStyle(
                 "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
-        // Ajuste aqui caso o botão voltar das bebidas precise ir para a
-        // CategorySelectionView ao invés de sabores
         btnVoltar.setOnAction(e -> new CategorySelectionView().show(stage));
 
         HBox leftBox = new HBox(btnVoltar);
@@ -50,8 +47,7 @@ public class DrinkSelectionView {
         listContainer.setPadding(new Insets(40, 0, 40, 0));
         listContainer.setAlignment(Pos.TOP_CENTER);
 
-        // Chamando o método .getAll() do Service
-        List<Product> totalProducts = productService.getAll();
+        List<Product> totalProducts = productService.getByCategoryId(categoryId);
 
         if (totalProducts != null) {
             for (int i = 0; i < totalProducts.size(); i++) {
@@ -59,23 +55,21 @@ public class DrinkSelectionView {
                 if (prod == null)
                     continue;
 
-                // Filtrando apenas por Bebidas
-                if (prod.getCategoryName() != null && prod.getCategoryName().equalsIgnoreCase("Bebida")) {
+                String nome = prod.getName();
+                String description = prod.getDescription();
+                double preco = prod.getPrice();
+                String imagem = prod.getImageUrl();
 
-                    String nome = prod.getName();
-                    String description = prod.getDescription();
-                    double preco = prod.getPrice();
-                    String imagem = prod.getImageUrl();
+                String imageIsNotNull = (imagem != null && !imagem.trim().isEmpty()) ? imagem : "agua_com.png";
 
-                    ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco),
-                            imagem);
+                ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco),
+                        imageIsNotNull);
 
-                    card.setOnAction(
-                            () -> new ProductDetailsView().show(stage, nome, preco, imagem, description, "Bebida",
-                                    categoryId));
+                card.setOnAction(
+                        () -> new ProductDetailsView().show(stage, nome, preco, imagem, description, "Geral",
+                                categoryId));
 
-                    listContainer.getChildren().add(card);
-                }
+                listContainer.getChildren().add(card);
             }
         }
 
