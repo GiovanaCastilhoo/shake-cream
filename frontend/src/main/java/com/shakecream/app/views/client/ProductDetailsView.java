@@ -3,11 +3,10 @@ package com.shakecream.app.views.client;
 import com.shakecream.app.models.Additional;
 import com.shakecream.app.models.ItemCarrinho;
 import com.shakecream.app.services.AdditionalService;
-import com.shakecream.app.state.CarrinhoGlobal;<<<<<<<HEAD=======
+import com.shakecream.app.state.CarrinhoGlobal;
 import com.shakecream.app.ui.AdditionalItem;
 import com.shakecream.app.ui.Theme;
 
->>>>>>>1d 6 c153321778cf7a19ca91e9b30c1c8399e6e0c
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -22,16 +21,8 @@ import java.util.stream.Collectors;
 
 public class ProductDetailsView {
 
-<<<<<<< HEAD
         private final AdditionalService additionalService = new AdditionalService();
 
-        private final String COLOR_PRIMARY = "#B95C68";
-        private final String COLOR_BG = "#FAF6F2";
-        private final String COLOR_TEXT_DARK = "#4A3B37";
-        private final String COLOR_TEXT_MUTED = "#8E8A85";
-
-=======
->>>>>>> 1d6c153321778cf7a19ca91e9b30c1c8399e6e0c
         private int quantidade = 1;
         private double precoProdutoBase;
         private double acrescimoTamanho = -1.0;
