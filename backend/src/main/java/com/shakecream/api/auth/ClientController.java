@@ -18,7 +18,8 @@ public class ClientController {
       ClientSession session = clientService.createSession(
           body.getName(),
           body.getTableNumber());
-
+      
+          System.out.println("SESSION CRIADA: " + session.getSessionId());
       return gson.toJson(session);
     });
   }

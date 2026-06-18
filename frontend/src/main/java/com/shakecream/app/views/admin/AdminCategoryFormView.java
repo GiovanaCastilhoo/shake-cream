@@ -3,6 +3,7 @@ package com.shakecream.app.views.admin;
 import com.shakecream.app.components.AlertComponent;
 import com.shakecream.app.models.Category;
 import com.shakecream.app.services.CategoryService;
+import com.shakecream.app.ui.Theme;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,13 +17,6 @@ public class AdminCategoryFormView {
 
         private final Category category;
 
-        private final String COLOR_BG_DARK = "#391100"; // Marrom Escuro
-        private final String COLOR_PRIMARY = "#B95C68"; // Rosa/Vinho ativo
-        private final String COLOR_BG_WORKSPACE = "#FAF6F2"; // Fundo creme claro
-        private final String COLOR_TEXT_DARK = "#3C2C28"; // Marrom escuro para fontes
-        private final String COLOR_TEXT_MUTED = "#8E8A85"; // Cinza de descrições
-        private final String COLOR_INPUT_BG = "#F0F0F0"; // Cor padrão dos inputs
-
         // 🔥 CREATE
         public AdminCategoryFormView() {
                 this.category = null;
@@ -35,7 +29,7 @@ public class AdminCategoryFormView {
 
         public void show(Stage stage) {
                 BorderPane mainLayout = new BorderPane();
-                mainLayout.setStyle("-fx-background-color: " + COLOR_BG_WORKSPACE + ";");
+                mainLayout.setStyle("-fx-background-color: " + Theme.COLOR_BG_WORKSPACE + ";");
 
                 // =========================================================================
                 // 1. TOP HEADER (CABEÇALHO SUPERIOR - 100% CENTRALIZADO)
@@ -44,7 +38,7 @@ public class AdminCategoryFormView {
                 topHeader.setPrefHeight(80);
                 topHeader.setAlignment(Pos.CENTER_LEFT);
                 topHeader.setPadding(new Insets(0, 40, 0, 30));
-                topHeader.setStyle("-fx-background-color: " + COLOR_BG_DARK + ";");
+                topHeader.setStyle("-fx-background-color: " + Theme.COLOR_BG_DARK + ";");
 
                 Button btnVoltarHeader = new Button("←  Voltar");
                 btnVoltarHeader.setStyle(
@@ -71,7 +65,7 @@ public class AdminCategoryFormView {
                 sidebar.setMaxWidth(240);
                 sidebar.setPadding(new Insets(30, 15, 30, 15));
                 sidebar.setStyle(
-                                "-fx-background-color: " + COLOR_BG_DARK
+                                "-fx-background-color: " + Theme.COLOR_BG_DARK
                                                 + "; -fx-border-color: #391100; -fx-border-width: 1 0 0 0;");
 
                 Button btnMenuMercadorias = createSidebarButton("🛒  Mercadorias", false);
@@ -98,7 +92,7 @@ public class AdminCategoryFormView {
                 // 3. ÁREA DE TRABALHO COESA (CENTRALIZAÇÃO ABSOLUTA COM OVERLAY)
                 // =========================================================================
                 StackPane contentArea = new StackPane();
-                contentArea.setStyle("-fx-background-color: " + COLOR_BG_WORKSPACE + ";");
+                contentArea.setStyle("-fx-background-color: " + Theme.COLOR_BG_WORKSPACE + ";");
                 mainLayout.setCenter(contentArea);
 
                 // Container onde o card vai se alinhar estritamente pelo meio da tela
@@ -117,9 +111,9 @@ public class AdminCategoryFormView {
                 VBox txtTitleBox = new VBox(4);
                 Label title = category == null ? new Label("+ Nova Categoria") : new Label("Editar");
                 title.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 26; -fx-text-fill: "
-                                + COLOR_TEXT_DARK + ";");
+                                + Theme.COLOR_TEXT_DARK + ";");
                 Label subtitle = new Label("Preencha o nome identificador para o cardápio");
-                subtitle.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 14; -fx-text-fill: " + COLOR_TEXT_MUTED
+                subtitle.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 14; -fx-text-fill: " + Theme.COLOR_TEXT_MUTED
                                 + ";");
                 txtTitleBox.getChildren().addAll(title, subtitle);
 
@@ -128,16 +122,16 @@ public class AdminCategoryFormView {
                 Label labelNome = new Label("Nome da categoria");
                 labelNome.setStyle(
                                 "-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK + ";");
+                                                + Theme.COLOR_TEXT_DARK + ";");
 
                 TextField txtNome = new TextField();
                 txtNome.setPromptText("Ex: Milk Shakes");
                 txtNome.setPrefHeight(45);
                 txtNome.setStyle(
-                                "-fx-background-color: " + COLOR_INPUT_BG + ";" +
+                                "-fx-background-color: " + Theme.COLOR_INPUT_BG + ";" +
                                                 "-fx-background-radius: 12;" +
                                                 "-fx-prompt-text-fill: #A5A19B;" +
-                                                "-fx-text-fill: " + COLOR_TEXT_DARK + ";" +
+                                                "-fx-text-fill: " + Theme.COLOR_TEXT_DARK + ";" +
                                                 "-fx-padding: 8 15 8 15;" +
                                                 "-fx-font-family: 'Montserrat';" +
                                                 "-fx-font-size: 14;");
@@ -158,13 +152,13 @@ public class AdminCategoryFormView {
                 btnCancelar.setPrefSize(160, 45);
                 btnCancelar.setStyle(
                                 "-fx-background-color: white; -fx-border-color: #A09A94; -fx-border-radius: 18; -fx-background-radius: 18; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK
+                                                + Theme.COLOR_TEXT_DARK
                                                 + "; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;");
                 btnCancelar.setOnAction(e -> new AdminCategoryView().show(stage));
 
                 Button btnSalvar = new Button("Salvar");
                 btnSalvar.setPrefSize(160, 45);
-                btnSalvar.setStyle("-fx-background-color: " + COLOR_PRIMARY
+                btnSalvar.setStyle("-fx-background-color: " + Theme.COLOR_PRIMARY
                                 + "; -fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 15; -fx-background-radius: 18; -fx-cursor: hand;");
                 btnSalvar.setOnAction(e -> handleSaveCategory(txtNome.getText(), stage));
 
@@ -188,7 +182,7 @@ public class AdminCategoryFormView {
                 btn.setMaxWidth(Double.MAX_VALUE);
                 btn.setPrefHeight(50);
                 String estiloInativo = "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 15; -fx-alignment: center; -fx-cursor: hand;";
-                String estiloAtivo = "-fx-background-color: " + COLOR_PRIMARY
+                String estiloAtivo = "-fx-background-color: " + Theme.COLOR_PRIMARY
                                 + "; -fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 15; -fx-alignment: center; -fx-background-radius: 12; -fx-cursor: hand;";
                 btn.setStyle(ativo ? estiloAtivo : estiloInativo);
                 return btn;

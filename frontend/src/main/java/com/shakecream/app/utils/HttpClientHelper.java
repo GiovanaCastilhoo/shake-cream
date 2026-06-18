@@ -11,14 +11,18 @@ public class HttpClientHelper {
 
     public static void applyAuth(HttpURLConnection conn) {
         String token = SessionStore.getToken();
-
-        System.out.println("TOKEN SEND DEBUG: " + token);
+        String sessionId = SessionStore.getSessionId();
 
         if (token != null && !token.isEmpty()) {
             conn.setRequestProperty("Authorization", "Bearer " + token);
-            System.out.println("AUTH HEADER SET");
-        } else {
-            System.out.println("NO TOKEN FOUND");
+        }
+
+        if (sessionId != null && !sessionId.isEmpty()) {
+            conn.setRequestProperty("Session-Id", sessionId);
+        }
+
+        if ((token == null || token.isEmpty()) && (sessionId == null || sessionId.isEmpty())) {
+            System.out.println("No auth or session headers set");
         }
     }
 }

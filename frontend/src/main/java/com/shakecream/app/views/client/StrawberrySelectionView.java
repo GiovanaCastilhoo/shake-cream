@@ -1,6 +1,8 @@
 package com.shakecream.app.views.client;
 
 import com.shakecream.app.components.ProductItemCard;
+import com.shakecream.app.models.Product;
+import com.shakecream.app.services.ProductService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,29 +11,34 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.util.List;
 
 public class StrawberrySelectionView {
 
-    public void show(Stage stage) {
+    private final ProductService productService = new ProductService();
+
+    public void show(Stage stage, int categoryId) {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FAF6F2;");
 
-        // --- HEADER ---
+        // --- HEADER COM TÍTULO CENTRALIZADO ---
         StackPane header = new StackPane();
         header.setPadding(new Insets(0, 30, 0, 30));
         header.setPrefHeight(80);
         header.setStyle("-fx-background-color: #B95C68;");
 
         Button btnVoltar = new Button("←  Voltar");
-        btnVoltar.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
-        btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage));
+        btnVoltar.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
+        btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage, categoryId));
 
         HBox leftBox = new HBox(btnVoltar);
         leftBox.setAlignment(Pos.CENTER_LEFT);
         leftBox.setPickOnBounds(false);
 
         Label lbTituloHeader = new Label("Morango");
-        lbTituloHeader.setStyle("-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
+        lbTituloHeader.setStyle(
+                "-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
 
         header.getChildren().addAll(lbTituloHeader, leftBox);
         root.setTop(header);
@@ -41,31 +48,40 @@ public class StrawberrySelectionView {
         listContainer.setPadding(new Insets(40, 0, 40, 0));
         listContainer.setAlignment(Pos.TOP_CENTER);
 
-        // 1. Instanciação dos 4 produtos exatos do seu protótipo do Figma
-        ProductItemCard cardTradicional = new ProductItemCard("Morango Tradicional", "Milk shake de morango natural", "R$ 13,00", "morango_tradicional.png");
-        ProductItemCard cardNutella = new ProductItemCard("Morango com Nutella", "Morango com Nutella", "R$ 15,00", "morango_nutella.png");
-        ProductItemCard cardLeiteNinho = new ProductItemCard("Morango com Leite Ninho", "Morango com Leite em pó", "R$ 17,00", "morango_ninho.png");
-        ProductItemCard cardChocolate = new ProductItemCard("Morango com Chocolate", "Morango com chocolate", "R$ 18,00", "morango_chocolate.png");
+        List<Product> totalProducts = productService.getByCategoryId(categoryId);
 
-        // 2. CORREÇÃO AQUI: Adicionado o parâmetro "Morango" no final de cada chamada show()
-        cardTradicional.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Morango Tradicional", 13.00, "morango_tradicional.png", "Milk shake de morango natural", "Morango")
-        );
+        if (totalProducts == null || totalProducts.isEmpty()) {
+            Label empty = new Label("Nenhum produto encontrado.");
+            listContainer.getChildren().add(empty);
+        } else {
 
-        cardNutella.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Morango com Nutella", 15.00, "morango_nutella.png", "Morango com Nutella", "Morango")
-        );
+            for (Product prod : totalProducts) {
+                if (prod == null)
+                    continue;
 
-        cardLeiteNinho.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Morango com Leite Ninho", 17.00, "morango_ninho.png", "Morango com Leite em pó", "Morango")
-        );
+                String nome = prod.getName();
+                String description = prod.getDescription();
+                double preco = prod.getPrice();
+                String imagem = prod.getImageUrl();
 
-        cardChocolate.setOnAction(() ->
-                new ProductDetailsView().show(stage, "Morango com Chocolate", 18.00, "morango_chocolate.png", "Morango com chocolate", "Morango")
-        );
+                ProductItemCard card = new ProductItemCard(
+                        nome,
+                        description,
+                        "R$ " + String.format("%.2f", preco),
+                        imagem);
 
-        // 3. Adiciona os 4 cards restaurados ao container de exibição
-        listContainer.getChildren().addAll(cardTradicional, cardNutella, cardLeiteNinho, cardChocolate);
+                card.setOnAction(() -> new ProductDetailsView().show(
+                        stage,
+                        nome,
+                        preco,
+                        imagem,
+                        description,
+                        "Bebida",
+                        prod.getCategoryId()));
+
+                listContainer.getChildren().add(card);
+            }
+        }
 
         ScrollPane scroll = new ScrollPane(listContainer);
         scroll.setFitToWidth(true);

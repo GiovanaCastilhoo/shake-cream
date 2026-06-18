@@ -53,20 +53,6 @@ public class AdminLoginView {
         TextField txtUsuario = (TextField) createStyledField("Usuário", false);
         PasswordField txtSenha = (PasswordField) createStyledField("Senha", true);
 
-        // Checkbox Lembrar de mim e link esqueci senha
-        HBox rowAcoesAuxiliares = new HBox();
-        rowAcoesAuxiliares.setAlignment(Pos.CENTER_LEFT);
-        CheckBox cbLembrar = new CheckBox("Lembrar de mim");
-        cbLembrar.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-text-fill: " + COLOR_TEXT_DARK + ";");
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        Hyperlink hlEsqueci = new Hyperlink("Esqueci minha senha");
-        hlEsqueci.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-text-fill: " + COLOR_PRIMARY
-                + "; -fx-underline: false;");
-        rowAcoesAuxiliares.getChildren().addAll(cbLembrar, spacer, hlEsqueci);
-
         // Botão Entrar
         Button btnEntrar = new Button("Entrar");
         btnEntrar.setMaxWidth(Double.MAX_VALUE);
@@ -86,7 +72,7 @@ public class AdminLoginView {
                 "-fx-background-color: transparent; -fx-border-color: #A09A94; -fx-border-radius: 12; -fx-text-fill: #7D7771; -fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-cursor: hand;");
         btnVoltarTotem.setOnAction(e -> new HelloApplication().show(stage));
 
-        card.getChildren().addAll(lbTitulo, txtUsuario, txtSenha, rowAcoesAuxiliares, btnEntrar, lbOu, btnVoltarTotem);
+        card.getChildren().addAll(lbTitulo, txtUsuario, txtSenha, btnEntrar, lbOu, btnVoltarTotem);
         root.getChildren().add(card);
 
         stage.getScene().setRoot(root);

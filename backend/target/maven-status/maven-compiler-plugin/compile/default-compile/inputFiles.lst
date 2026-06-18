@@ -1,4 +1,5 @@
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\dao\menu\MenuDAO.java
+C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\util\SessionUtil.java
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\api\auth\ClientController.java
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\service\MenuService.java
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\model\ClientSession.java
@@ -6,6 +7,7 @@ C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\servic
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\util\AuthUtil.java
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\dao\additional\AdditionalDAO.java
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\db\DB.java
+C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\model\Client.java
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\dao\order\OrderProductAdditionalDAO.java
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\api\auth\UserController.java
 C:\Users\Giovana\Desktop\shake-cream\backend\src\main\java\com\shakecream\model\OrderRequest.java

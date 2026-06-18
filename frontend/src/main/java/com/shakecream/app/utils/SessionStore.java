@@ -6,6 +6,15 @@ public class SessionStore {
     private static String role;
     private static Integer userId;
     private static Integer tableNumber;
+    private static String sessionId;
+
+    public static void setSessionId(String sessionId) {
+        SessionStore.sessionId = sessionId;
+    }
+
+    public static String getSessionId() {
+        return sessionId;
+    }
 
     public static void setToken(String token) {
         SessionStore.token = token;

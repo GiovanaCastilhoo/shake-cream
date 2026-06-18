@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.shakecream.app.HelloApplication;
 import com.shakecream.app.components.AlertComponent;
-import com.shakecream.app.models.Additional;
 import com.shakecream.app.models.Category;
 import com.shakecream.app.models.Product;
 import com.shakecream.app.services.CategoryService;

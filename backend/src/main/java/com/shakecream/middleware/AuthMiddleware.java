@@ -4,6 +4,8 @@ import static spark.Spark.*;
 
 import com.shakecream.model.User;
 import com.shakecream.util.AuthUtil;
+import com.shakecream.model.Client;
+import com.shakecream.util.SessionUtil;
 
 public class AuthMiddleware {
 
@@ -12,24 +14,37 @@ public class AuthMiddleware {
         before((req, res) -> {
 
             String path = req.pathInfo();
-            System.out.println("METHOD: " + req.requestMethod());
-            System.out.println("PATH: " + req.pathInfo());
-            System.out.println("AUTH HEADER: " + req.headers("Authorization"));
+            String method = req.requestMethod();
 
-            boolean isPublic = path.startsWith("/client/login") ||
-                    path.startsWith("/login") ||
-                    (req.requestMethod().equals("GET") && path.startsWith("/categories"));
-
-            if (isPublic)
-                return;
+            boolean isPublic =
+                path.startsWith("/client/login") ||
+                path.startsWith("/login") ||
+                (method.equals("GET") && (
+                    path.startsWith("/categories") 
+                ));
+                
+            if (isPublic) return;
 
             try {
                 User user = AuthUtil.getUserFromToken(req);
                 req.attribute("user", user);
+                return;
 
             } catch (Exception e) {
-                halt(401, "UNAUTHORIZED");
             }
+
+            // tenta session
+            String sessionId = req.headers("Session-Id");
+
+            if (sessionId != null) {
+                Client client = SessionUtil.getClient(sessionId);
+
+            if (client != null) {
+                req.attribute("client", client);
+                return;
+            }}
+
+            halt(401, "UNAUTHORIZED");
         });
     }
 }

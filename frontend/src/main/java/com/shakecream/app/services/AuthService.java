@@ -1,9 +1,7 @@
 package com.shakecream.app.services;
 
 import com.google.gson.Gson;
-import com.shakecream.app.models.ClientSession;
 import com.shakecream.app.models.LoginResponse;
-import com.shakecream.app.models.User;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;

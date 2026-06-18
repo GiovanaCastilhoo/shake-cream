@@ -37,11 +37,35 @@ public class ProductService {
         }
     }
 
+    public List<Product> getByCategoryId(int categoryId) {
+        try {
+            URL url = new URL(BASE_URL + "/category/" + categoryId);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("GET");
+
+            HttpClientHelper.applyJsonHeaders(conn);
+            HttpClientHelper.applyAuth(conn);
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()));
+
+            return gson.fromJson(
+                    reader,
+                    new TypeToken<List<Product>>() {
+                    }.getType());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("ERROR_GET_PRODUCTS_BY_CATEGORY: " + e.getMessage(), e);
+        }
+    }
+
     public Product create(Product product) {
         try {
             URL url = new URL(BASE_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            
+
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
 
