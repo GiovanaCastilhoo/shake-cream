@@ -32,6 +32,10 @@ public class ProductService {
         return productDAO.findAll();
     }
 
+    public List<Product> getByCategoryId(int categoryId) {
+        return productDAO.findByCategoryId(categoryId);
+    }
+
     public Product update(Product product, User user) {
 
             AuthUtil.validateAdmin(user);

@@ -31,6 +31,7 @@ public class ProductDetailsView {
         private boolean ehBebida = false;
         private String pathImagem;
         private String categoriaSabor = "Geral";
+        private int categoryId;
 
         private Label lbQuantidade;
         private Label lbPrecoTotal;
@@ -41,7 +42,8 @@ public class ProductDetailsView {
         private HBox flowAdicionaisRapidos;
 
         public void show(Stage stage, String nomeProduto, double precoBase, String pathImagem, String descricaoProduto,
-                        String categoriaSabor) {
+                        String categoriaSabor, int categoryId) {
+                this.categoryId = categoryId;
                 this.ehBebida = false;
                 this.categoriaSabor = categoriaSabor;
                 this.acrescimoTamanho = -1.0;
@@ -51,7 +53,7 @@ public class ProductDetailsView {
 
         public void show(Stage stage, String nomeProduto, double precoBase, String pathImagem,
                         String descricaoProduto) {
-                show(stage, nomeProduto, precoBase, pathImagem, descricaoProduto, "Geral");
+                show(stage, nomeProduto, precoBase, pathImagem, descricaoProduto, "Geral", categoryId);
         }
 
         public void show(Stage stage, String nomeProduto, double precoBase, String pathImagem, String descricaoProduto,
@@ -418,23 +420,23 @@ public class ProductDetailsView {
 
         private void voltarParaTelaOrigem(Stage stage) {
                 if (ehBebida || "Bebida".equalsIgnoreCase(categoriaSabor)) {
-                        new DrinkSelectionView().show(stage);
+                        new DrinkSelectionView().show(stage, categoryId);
                 } else {
                         switch (categoriaSabor.toLowerCase()) {
                                 case "morango":
-                                        new StrawberrySelectionView().show(stage);
+                                        new StrawberrySelectionView().show(stage, categoryId);
                                         break;
                                 case "chocolate":
-                                        new ChocolateSelectionView().show(stage);
+                                        new ChocolateSelectionView().show(stage, categoryId);
                                         break;
                                 case "baunilha":
-                                        new VanillaSelectionView().show(stage);
+                                        new VanillaSelectionView().show(stage, categoryId);
                                         break;
                                 case "especiais":
-                                        new SpecialSelectionView().show(stage);
+                                        new SpecialSelectionView().show(stage, categoryId);
                                         break;
                                 default:
-                                        new FlavorSelectionView().show(stage);
+                                        new FlavorSelectionView().show(stage, categoryId);
                                         break;
                         }
                 }
@@ -443,11 +445,11 @@ public class ProductDetailsView {
         private void processarESalvarPedido(Stage stage, String nomeProduto) {
 
                 // if (!ehBebida) {
-                //         if (tamanhoSelecionado.isEmpty()) {
-                //                 exibirAlertaAviso("Tamanho Obrigatório",
-                //                                 "Por favor, selecione um tamanho (P, M ou G) antes de prosseguir.");
-                //                 return;
-                //         }
+                // if (tamanhoSelecionado.isEmpty()) {
+                // exibirAlertaAviso("Tamanho Obrigatório",
+                // "Por favor, selecione um tamanho (P, M ou G) antes de prosseguir.");
+                // return;
+                // }
                 // }
 
                 List<Additional> extrasSalvos = additionalsUI.stream()

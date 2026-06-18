@@ -83,6 +83,51 @@ public class ProductDAO {
         return products;
     }
 
+    public List<Product> findByCategoryId(int categoryId) {
+
+    String sql = """
+            SELECT
+                p.id,
+                p.name,
+                p.description,
+                p.price,
+                p.image_url,
+                p.category_id,
+                c.name AS category_name
+            FROM products p
+            JOIN categories c ON c.id = p.category_id
+            WHERE p.category_id = ?
+            """;
+
+    List<Product> products = new ArrayList<>();
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setInt(1, categoryId);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getDouble("price"));
+                p.setImageUrl(rs.getString("image_url"));
+                p.setCategoryId(rs.getInt("category_id"));
+                p.setCategoryName(rs.getString("category_name"));
+
+                products.add(p);
+            }
+        }
+
+    } catch (SQLException e) {
+        throw new RuntimeException("ERROR_FIND_PRODUCTS_BY_CATEGORY", e);
+    }
+
+        return products;
+    }
+
     // FIND BY ID
     public Product findById(int id) {
         String sql = "SELECT * FROM products WHERE id = ?";
