@@ -48,32 +48,38 @@ public class StrawberrySelectionView {
         listContainer.setPadding(new Insets(40, 0, 40, 0));
         listContainer.setAlignment(Pos.TOP_CENTER);
 
-        // Chamando o método .getAll() do Service
-        List<Product> totalProducts = productService.getAll();
+        List<Product> totalProducts = productService.getByCategoryId(categoryId);
 
-        if (totalProducts != null) {
-            for (int i = 0; i < totalProducts.size(); i++) {
-                Product prod = totalProducts.get(i);
+        if (totalProducts == null || totalProducts.isEmpty()) {
+            Label empty = new Label("Nenhum produto encontrado.");
+            listContainer.getChildren().add(empty);
+        } else {
+
+            for (Product prod : totalProducts) {
                 if (prod == null)
                     continue;
 
-                // Filtrando apenas por Morango
-                if (prod.getCategoryName() != null && prod.getCategoryName().equalsIgnoreCase("Morango")) {
+                String nome = prod.getName();
+                String description = prod.getDescription();
+                double preco = prod.getPrice();
+                String imagem = prod.getImageUrl();
 
-                    String nome = prod.getName();
-                    String description = prod.getDescription();
-                    double preco = prod.getPrice();
-                    String imagem = prod.getImageUrl();
+                ProductItemCard card = new ProductItemCard(
+                        nome,
+                        description,
+                        "R$ " + String.format("%.2f", preco),
+                        imagem);
 
-                    ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco),
-                            imagem);
+                card.setOnAction(() -> new ProductDetailsView().show(
+                        stage,
+                        nome,
+                        preco,
+                        imagem,
+                        description,
+                        "Bebida",
+                        prod.getCategoryId()));
 
-                    card.setOnAction(
-                            () -> new ProductDetailsView().show(stage, nome, preco, imagem, description, "Morango",
-                                    categoryId));
-
-                    listContainer.getChildren().add(card);
-                }
+                listContainer.getChildren().add(card);
             }
         }
 
