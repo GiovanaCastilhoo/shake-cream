@@ -4,6 +4,7 @@ import com.shakecream.app.models.Additional;
 import com.shakecream.app.models.ItemCarrinho;
 import com.shakecream.app.state.CarrinhoGlobal;
 import com.shakecream.app.ui.AdditionalItem;
+import com.shakecream.app.ui.Theme;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,11 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductDetailsView {
-
-        private final String COLOR_PRIMARY = "#B95C68";
-        private final String COLOR_BG = "#FAF6F2";
-        private final String COLOR_TEXT_DARK = "#4A3B37";
-        private final String COLOR_TEXT_MUTED = "#8E8A85";
 
         private int quantidade = 1;
         private double precoProdutoBase;
@@ -74,12 +70,12 @@ public class ProductDetailsView {
                 this.rootStack = new StackPane();
 
                 BorderPane mainLayout = new BorderPane();
-                mainLayout.setStyle("-fx-background-color: " + COLOR_BG + ";");
+                mainLayout.setStyle("-fx-background-color: " + Theme.COLOR_BG_WORKSPACE + ";");
 
                 // --- HEADER ---
                 StackPane header = new StackPane();
                 header.setPrefHeight(80);
-                header.setStyle("-fx-background-color: " + COLOR_PRIMARY + ";");
+                header.setStyle("-fx-background-color: " + Theme.COLOR_PRIMARY + ";");
                 header.setPadding(new Insets(0, 30, 0, 30));
 
                 Button btnVoltar = new Button("←  Voltar");
@@ -129,7 +125,7 @@ public class ProductDetailsView {
                 Button btnMinus = new Button("-");
                 btnMinus.setStyle(
                                 "-fx-background-color: transparent; -fx-font-family: 'Montserrat'; -fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK + "; -fx-cursor: hand; -fx-min-width: 35;");
+                                                + Theme.COLOR_TEXT_DARK + "; -fx-cursor: hand; -fx-min-width: 35;");
                 btnMinus.setOnAction(e -> {
                         if (quantidade > 1) {
                                 quantidade--;
@@ -140,12 +136,12 @@ public class ProductDetailsView {
                 lbQuantidade = new Label("1");
                 lbQuantidade.setStyle(
                                 "-fx-font-family: 'Montserrat'; -fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK + ";");
+                                                + Theme.COLOR_TEXT_DARK + ";");
 
                 Button btnPlus = new Button("+");
                 btnPlus.setStyle(
                                 "-fx-background-color: transparent; -fx-font-family: 'Montserrat'; -fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK + "; -fx-cursor: hand; -fx-min-width: 35;");
+                                                + Theme.COLOR_TEXT_DARK + "; -fx-cursor: hand; -fx-min-width: 35;");
                 btnPlus.setOnAction(e -> {
                         quantidade++;
                         atualizarValores();
@@ -156,11 +152,11 @@ public class ProductDetailsView {
                 lbPrecoTotal = new Label("R$ 0,00");
                 lbPrecoTotal.setStyle(
                                 "-fx-font-family: 'Montserrat'; -fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_PRIMARY + ";");
+                                                + Theme.COLOR_PRIMARY + ";");
 
                 Button btnAdicionarAoCarrinho = new Button("ADICIONAR");
                 btnAdicionarAoCarrinho.setPrefSize(280, 55);
-                btnAdicionarAoCarrinho.setStyle("-fx-background-color: " + COLOR_PRIMARY
+                btnAdicionarAoCarrinho.setStyle("-fx-background-color: " + Theme.COLOR_PRIMARY
                                 + "; -fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 14; -fx-cursor: hand;");
                 btnAdicionarAoCarrinho.setOnAction(e -> processarESalvarPedido(stage, nomeProduto));
 
@@ -174,17 +170,17 @@ public class ProductDetailsView {
                 lbNome.setWrapText(true);
                 lbNome.setMaxWidth(550);
                 lbNome.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: "
-                                + COLOR_TEXT_DARK + ";");
+                                + Theme.COLOR_TEXT_DARK + ";");
 
                 Label lbDescricao = new Label(descricaoProduto);
                 lbDescricao
                                 .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 15; -fx-text-fill: "
-                                                + COLOR_TEXT_MUTED + ";");
+                                                + Theme.COLOR_TEXT_MUTED + ";");
 
                 Label lbPrecoBase = new Label("R$ " + String.format("%.2f", precoProdutoBase));
                 lbPrecoBase.setStyle(
                                 "-fx-font-family: 'Montserrat'; -fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_PRIMARY + ";");
+                                                + Theme.COLOR_PRIMARY + ";");
 
                 colDireita.getChildren().addAll(lbNome, lbDescricao, lbPrecoBase);
 
@@ -192,7 +188,7 @@ public class ProductDetailsView {
                         Label lbTituloTamanho = new Label("ESCOLHA O TAMANHO *");
                         lbTituloTamanho
                                         .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: "
-                                                        + COLOR_TEXT_MUTED + ";");
+                                                        + Theme.COLOR_TEXT_MUTED + ";");
 
                         HBox boxTamanhosLayout = new HBox(15);
                         cardP = renderSizeCard("P", "300 ml", 0.00);
@@ -203,7 +199,7 @@ public class ProductDetailsView {
                         Label lbTituloAdicionais = new Label("ADICIONAIS (opcional)");
                         lbTituloAdicionais
                                         .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: "
-                                                        + COLOR_TEXT_MUTED + ";");
+                                                        + Theme.COLOR_TEXT_MUTED + ";");
 
                         flowAdicionaisRapidos = new HBox(12);
                         flowAdicionaisRapidos.setAlignment(Pos.CENTER_LEFT);
@@ -212,7 +208,7 @@ public class ProductDetailsView {
                         Label lbTituloObs = new Label("OBSERVAÇÕES (opcional)");
                         lbTituloObs
                                         .setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: "
-                                                        + COLOR_TEXT_MUTED + ";");
+                                                        + Theme.COLOR_TEXT_MUTED + ";");
 
                         txtObs = new TextArea();
                         txtObs.setPromptText("Ex: Sem açúcar, pouca cobertura...");
@@ -243,10 +239,10 @@ public class ProductDetailsView {
                 Label l1 = new Label(label);
                 l1.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 18;");
                 Label l2 = new Label(ml);
-                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_MUTED
+                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + Theme.COLOR_TEXT_MUTED
                                 + ";");
                 Label l3 = new Label("R$ " + String.format("%.2f", valorExtra));
-                l3.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + COLOR_TEXT_DARK
+                l3.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 12; -fx-text-fill: " + Theme.COLOR_TEXT_DARK
                                 + ";");
 
                 box.getChildren().addAll(l1, l2, l3);
@@ -262,7 +258,7 @@ public class ProductDetailsView {
                         cardG.setStyle(
                                         "-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-border-radius: 15; -fx-background-radius: 15;");
 
-                        box.setStyle("-fx-background-color: #F8D7DA; -fx-border-color: " + COLOR_PRIMARY
+                        box.setStyle("-fx-background-color: #F8D7DA; -fx-border-color: " + Theme.COLOR_PRIMARY
                                         + "; -fx-border-radius: 15; -fx-background-radius: 15;");
                         atualizarValores();
                 });
@@ -292,7 +288,7 @@ public class ProductDetailsView {
 
                 Label lbMais = new Label("+ MAIS");
                 lbMais.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: "
-                                + COLOR_TEXT_DARK + ";");
+                                + Theme.COLOR_TEXT_DARK + ";");
 
                 cardMais.getChildren().add(lbMais);
                 cardMais.setOnMouseClicked(e -> abrirMenuScrollVerticalAdicionais());
@@ -306,19 +302,20 @@ public class ProductDetailsView {
                 box.setAlignment(Pos.CENTER);
                 box.setPrefSize(125, 75);
                 box.setStyle(ad.isSelecionado()
-                                ? "-fx-background-color: #F8D7DA; -fx-border-color: " + COLOR_PRIMARY
+                                ? "-fx-background-color: #F8D7DA; -fx-border-color: " + Theme.COLOR_PRIMARY
                                                 + "; -fx-background-radius: 15; -fx-border-radius: 15;"
                                 : "-fx-background-color: white; -fx-border-color: #E0DDD9; -fx-background-radius: 15; -fx-border-radius: 15;");
 
                 Label l1 = new Label(ad.getAdditional().getName().toUpperCase());
                 l1.setStyle("-fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-font-size: 11;");
                 Label l2 = new Label("R$ " + String.format("%.2f", ad.getAdditional().getPrice()));
-                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 11; -fx-text-fill: " + COLOR_TEXT_MUTED
+                l2.setStyle("-fx-font-family: 'Montserrat'; -fx-font-size: 11; -fx-text-fill: " + Theme.COLOR_TEXT_MUTED
                                 + ";");
                 box.getChildren().addAll(l1, l2);
 
                 Label checkMark = new Label("✓");
-                checkMark.setStyle("-fx-text-fill: " + COLOR_PRIMARY + "; -fx-font-weight: bold; -fx-font-size: 14;");
+                checkMark.setStyle("-fx-text-fill: " + Theme.COLOR_PRIMARY
+                                + "; -fx-font-weight: bold; -fx-font-size: 14;");
                 checkMark.setVisible(ad.isSelecionado());
                 StackPane.setAlignment(checkMark, Pos.TOP_LEFT);
                 StackPane.setMargin(checkMark, new Insets(6, 0, 0, 10));
@@ -348,7 +345,7 @@ public class ProductDetailsView {
                 Label titleModal = new Label("Selecione os Adicionais");
                 titleModal.setStyle(
                                 "-fx-font-family: 'Montserrat'; -fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: "
-                                                + COLOR_TEXT_DARK + ";");
+                                                + Theme.COLOR_TEXT_DARK + ";");
 
                 VBox listContent = new VBox(10);
                 for (AdditionalItem ad : additionalsUI) {
@@ -370,7 +367,7 @@ public class ProductDetailsView {
                         HBox.setHgrow(sp, Priority.ALWAYS);
 
                         Label pr = new Label("+ R$ " + String.format("%.2f", data.getPrice()));
-                        pr.setStyle("-fx-font-family: 'Montserrat'; -fx-text-fill: " + COLOR_PRIMARY + ";");
+                        pr.setStyle("-fx-font-family: 'Montserrat'; -fx-text-fill: " + Theme.COLOR_PRIMARY + ";");
 
                         row.getChildren().addAll(cb, name, sp, pr);
 
@@ -390,7 +387,7 @@ public class ProductDetailsView {
                 Button btnSalvarModal = new Button("CONFIRMAR SELEÇÃO");
                 btnSalvarModal.setMaxWidth(Double.MAX_VALUE);
                 btnSalvarModal.setPrefHeight(45);
-                btnSalvarModal.setStyle("-fx-background-color: " + COLOR_PRIMARY
+                btnSalvarModal.setStyle("-fx-background-color: " + Theme.COLOR_PRIMARY
                                 + "; -fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;");
                 btnSalvarModal.setOnAction(e -> {
                         rootStack.getChildren().remove(glassPane);
