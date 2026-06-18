@@ -66,7 +66,7 @@ public class DrinkSelectionView {
                         imageIsNotNull);
 
                 card.setOnAction(
-                        () -> new ProductDetailsView().show(stage, nome, preco, imagem, description, "Geral",
+                        () -> new ProductDetailsView().show(stage, nome, preco, imagem, description, "Bebida",
                                 categoryId));
 
                 listContainer.getChildren().add(card);
