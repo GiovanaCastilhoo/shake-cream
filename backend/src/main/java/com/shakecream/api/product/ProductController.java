@@ -29,17 +29,13 @@ public class ProductController {
       return gson.toJson(productService.getAll());
     });
 
-    put("/products/:id", (req, res) -> {
-      User user = req.attribute("user");
+    get("/products/category/:id", (req, res) -> {
+      res.type("application/json");
 
-      int id = Integer.parseInt(req.params(":id"));
+      int categoryId = Integer.parseInt(req.params(":id"));
 
-      Product product = gson.fromJson(req.body(), Product.class);
-      product.setId(id);
-
-      return gson.toJson(productService.update(product, user));
+      return gson.toJson(productService.getByCategoryId(categoryId));
     });
-
     delete("/products/:id", (req, res) -> {
 
       User user = req.attribute("user");

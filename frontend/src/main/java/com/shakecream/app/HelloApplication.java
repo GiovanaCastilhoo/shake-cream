@@ -1,11 +1,10 @@
 package com.shakecream.app;
 
-import com.shakecream.app.models.ClientSession;
-import com.shakecream.app.models.LoginResponse;
 import com.shakecream.app.services.ClientService;
 import com.shakecream.app.utils.SessionStore;
 import com.shakecream.app.views.admin.AdminLoginView;
 import com.shakecream.app.views.client.CategorySelectionView;
+import com.shakecream.app.models.ClientLoginResponse;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -198,15 +197,15 @@ public class HelloApplication extends Application {
             return;
         }
 
-        LoginResponse session = clientService.loginClient(nome, tableNumber);
+        ClientLoginResponse clientLoginResponse = clientService.loginClient(nome, tableNumber);
 
-        if (session == null) {
+        if (clientLoginResponse == null) {
             System.out.println("Erro ao criar sessão do cliente.");
             return;
         }
 
         // SALVA TOKEN (sessionId no client)
-        SessionStore.setToken(session.getToken());
+        SessionStore.setSessionId(clientLoginResponse.getSessionId());
 
         // CLIENT NÃO TEM USER → define fixo
         SessionStore.setRole("USER");

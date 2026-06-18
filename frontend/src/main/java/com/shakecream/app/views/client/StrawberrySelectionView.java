@@ -17,7 +17,7 @@ public class StrawberrySelectionView {
 
     private final ProductService productService = new ProductService();
 
-    public void show(Stage stage) {
+    public void show(Stage stage, int categoryId) {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FAF6F2;");
 
@@ -28,15 +28,17 @@ public class StrawberrySelectionView {
         header.setStyle("-fx-background-color: #B95C68;");
 
         Button btnVoltar = new Button("←  Voltar");
-        btnVoltar.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
-        btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage));
+        btnVoltar.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-font-family: 'Montserrat'; -fx-cursor: hand;");
+        btnVoltar.setOnAction(e -> new FlavorSelectionView().show(stage, categoryId));
 
         HBox leftBox = new HBox(btnVoltar);
         leftBox.setAlignment(Pos.CENTER_LEFT);
         leftBox.setPickOnBounds(false);
 
         Label lbTituloHeader = new Label("Morango");
-        lbTituloHeader.setStyle("-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
+        lbTituloHeader.setStyle(
+                "-fx-text-fill: white; -fx-font-family: 'Montserrat'; -fx-font-size: 26; -fx-font-weight: bold;");
 
         header.getChildren().addAll(lbTituloHeader, leftBox);
         root.setTop(header);
@@ -52,21 +54,23 @@ public class StrawberrySelectionView {
         if (totalProducts != null) {
             for (int i = 0; i < totalProducts.size(); i++) {
                 Product prod = totalProducts.get(i);
-                if (prod == null) continue;
+                if (prod == null)
+                    continue;
 
                 // Filtrando apenas por Morango
                 if (prod.getCategoryName() != null && prod.getCategoryName().equalsIgnoreCase("Morango")) {
-                    
+
                     String nome = prod.getName();
                     String description = prod.getDescription();
                     double preco = prod.getPrice();
                     String imagem = prod.getImageUrl();
 
-                    ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco), imagem);
+                    ProductItemCard card = new ProductItemCard(nome, description, "R$ " + String.format("%.2f", preco),
+                            imagem);
 
-                    card.setOnAction(() ->
-                            new ProductDetailsView().show(stage, nome, preco, imagem, description, "Morango")
-                    );
+                    card.setOnAction(
+                            () -> new ProductDetailsView().show(stage, nome, preco, imagem, description, "Morango",
+                                    categoryId));
 
                     listContainer.getChildren().add(card);
                 }
